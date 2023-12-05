@@ -117,7 +117,8 @@ openai <- R6Class(
       fine_tuning_jobs ="https://api.openai.com/v1/fine_tuning/jobs",
       embeddings = "https://api.openai.com/v1/embeddings",
       audio = "https://api.openai.com/v1/audio",
-      images = "https://api.openai.com/v1/images"
+      images = "https://api.openai.com/v1/images",
+      assistants = "https://api.openai.com/v1/assistants"
     ),
     #base_call
     base_call = function(endpoint, path="", body=NULL, method="GET", headers=list(), query=list()){
@@ -189,8 +190,8 @@ openai <- R6Class(
       private$api_key<-api_key
     },
     #' @description Configure the proxy settings.
-    #' @param proxy_ip The IP address of the proxy.
-    #' @param proxy_port The port number of the proxy.
+    #' @param proxy_ip character Required. The IP address of the proxy.
+    #' @param proxy_port character Required. The port number of the proxy.
     set_proxy = function(proxy_ip,proxy_port){
       if(!grepl("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", proxy_ip)) {
         stop("Invalid proxy IP address.")
@@ -205,9 +206,11 @@ openai <- R6Class(
       private$proxy$ip = proxy_ip
       private$proxy$port = proxy_port
     },
-    #' @description Retrieve a list of available models from OpenAI.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return A list of available models.
+    #' @description Lists the currently available models, and provides basic information
+    #'              about each one such as the owner and availability.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return A list of model objects.
     get_model_list=function(verbosity=0){
       result <- private$api_call("models", headers = list(`Content-Type` = "application/json"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
@@ -216,10 +219,12 @@ openai <- R6Class(
         return(result$data$data)
       }
     },
-    #' @description Retrieve details of a specific model from OpenAI.
-    #' @param model The model ID.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Details of the specified model.
+    #' @description Retrieves a model instance, providing basic information about
+    #'              the model such as the owner and permissioning.
+    #' @param model character Required. The ID of the model to use for this request
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The model object matching the specified ID.
     get_model_retrieve=function(model,verbosity=0){
       result <- private$api_call("models", paste0("/", model), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
@@ -228,28 +233,35 @@ openai <- R6Class(
         return(result$data$data)
       }
     },
-    #' @description Delete a fine-tuned model from OpenAI.
-    #' @param model_id The ID of the file to delete.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Response indicating the success or failure of the delete operation.
-    fine_tuning_jobs_delete=function(model_id,verbosity=0){
-      result <- private$api_call("models", paste0("/", model_id), method = "DELETE", verbosity = verbosity)
+    #' @description Delete a fine-tuned model. You must have the Owner role in
+    #'              your organization to delete a model.
+    #' @param model character Required. The model to delete
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return Deletion status.
+    fine_tuning_jobs_delete=function(model,verbosity=0){
+      result <- private$api_call("models", paste0("/", model), method = "DELETE", verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
         return(result$data)
       }
     },
-    #' @description Get completions for a given prompt using a specific model.
-    #' @param prompt The input text to get completions for.
-    #' @param model The model to use for generating completions.
-    #' @param stream A boolean indicating whether to stream the results.
+    #' @description Creates a completion for the provided prompt and parameters.
+    #' @param prompt character Required. The prompt(s) to generate completions for, encoded as a string,
+    #'               array of strings, array of tokens, or array of token arrays. Note that <|endoftext|> is
+    #'               the document separator that the model sees during training, so if a prompt is not specified
+    #'               the model will generate as if from the beginning of a new document.
+    #' @param model character Required. The model to use for generating completions.
+    #' @param stream logical. Whether to stream back partial progress. If set, tokens will be sent
+    #'              as data-only server-sent events as they become available.
     #' @param num The num parameter controls the number of text entries returned by a stream in one go.
     #'            Note that this is different from the n parameter, which specifies the number of results returned.
     #'            For detailed information on the n parameter, please refer to OpenAI's API documentation.
-    #' @param verbosity Verbosity level for the API call.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:max_tokens;n;stop;temperature......
-    #' @return Completions based on the input prompt.
+    #' @return Returns a completion object, or a sequence of completion objects if the request is streamed.
     get_completions_query=function(prompt,model,stream=F,num=2,verbosity = 0,...){
       option = list(...)
       option$prompt = prompt
@@ -267,16 +279,18 @@ openai <- R6Class(
         }
       }
     },
-    #' @description Generate conversational completions using chat models.
-    #' @param messages A list of message objects, where each message has a role and content.
-    #' @param model The model to use for generating chat completions.
-    #' @param stream A boolean indicating whether to stream the results.
+    #' @description Creates a model response for the given chat conversation.
+    #' @param messages list Required. A list of messages comprising the conversation so far.
+    #' @param model character Required. The model to use for generating chat completions.
+    #' @param stream logical. Whether to stream back partial progress. If set, tokens will be sent
+    #'              as data-only server-sent events as they become available.
     #' @param num The num parameter controls the number of text entries returned by a stream in one go.
     #'            Note that this is different from the n parameter, which specifies the number of results returned.
     #'            For detailed information on the n parameter, please refer to OpenAI's API documentation.
-    #' @param verbosity Verbosity level for the API call.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:max_tokens;n;stop;temperature......
-    #' @return Completions based on the conversational context.
+    #' @return Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.
     get_chat_completions_query=function(messages,model,stream=F,num=2,verbosity = 0,...){
       option = list(...)
       option$messages = messages
@@ -294,11 +308,18 @@ openai <- R6Class(
         }
       }
     },
-    #' @description Upload a file to OpenAI.
-    #' @param path Path to the file that needs to be uploaded.
-    #' @param purpose Purpose of the file (e.g., "fine-tune").
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Response indicating the success or failure of the upload operation.
+    #' @description Upload a file that can be used across various endpoints. The size of all the
+    #'              files uploaded by one organization can be up to 100 GB.The size of individual
+    #'              files can be a maximum of 512 MB or 2 million tokens for Assistants.
+    #'              See the Assistants Tools guide to learn more about the types of files supported.
+    #'              The Fine-tuning API only supports .jsonl files.
+    #' @param path character Required. Path to the file that needs to be uploaded.
+    #' @param purpose The intended purpose of the uploaded file.
+    #'                Use "fine-tune" for Fine-tuning and "assistants" for Assistants and Messages.
+    #'                This allows us to validate the format of the uploaded file is correct for fine-tuning.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The uploaded File object.
     files_upload=function(path,verbosity=0,purpose){
       result<-private$file_call(endpoint = "files",body = list(file = curl::form_file(path),purpose=purpose),verbosity=verbosity)
       if (inherits(result, "openai_error")) {
@@ -307,21 +328,25 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description Retrieve a list of files from OpenAI.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return A list of files.
-    files_get_list=function(verbosity=0){
-      result <- private$api_call("files", verbosity = verbosity)
+    #' @description Returns a list of files that belong to the user's organization.
+    #' @param ... Additional parameters as required by the OpenAI API.For example:purpose
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return A list of File objects.
+    files_get_list=function(...,verbosity=0){
+      option <- list(...)
+      result <- private$api_call("files",query = option, verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
         return(result$data)
       }
     },
-    #' @description Delete a file from OpenAI.
-    #' @param file_id The ID of the file to delete.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Response indicating the success or failure of the delete operation.
+    #' @description Delete a file.
+    #' @param file_id character Required. The ID of the file to use for this request.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return Deletion status.
     files_delete=function(file_id,verbosity=0){
       result <- private$api_call("files", paste0("/", file_id), method = "DELETE", verbosity = verbosity)
       if (inherits(result, "openai_error")) {
@@ -330,10 +355,11 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description Retrieve details of a specific file from OpenAI.
-    #' @param file_id The ID of the file to retrieve details for.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Details of the specified file.
+    #' @description Returns information about a specific file.
+    #' @param file_id character Required. The ID of the file to retrieve details for.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The File object matching the specified ID.
     files_retrieve=function(file_id,verbosity=0){
       result <- private$api_call("files", paste0("/", file_id), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
@@ -342,11 +368,14 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description Create a fine-tuning job in OpenAI.
-    #' @param model The model ID.
-    #' @param training_file The file used for training.
-    #' @param hyperparameters params list for the fine-tuning include batch_size;learning_rate_multiplier;n_epochs.
-    #' @param verbosity Verbosity level for the API call.
+    #' @description Creates a job that fine-tunes a specified model from a given dataset.
+    #'              Response includes details of the enqueued job including job status and
+    #'              the name of the fine-tuned models once complete.
+    #' @param model character Required. The model ID.
+    #' @param training_file character Required. The file used for training.
+    #' @param hyperparameters list. The hyperparameters used for the fine-tuning job. include batch_size;learning_rate_multiplier;n_epochs.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:validation_file......
     #' @return Response indicating the success or failure of the fine-tuning job creation.
     fine_tuning_jobs_create=function(model,training_file,hyperparameters=list(n_epochs=1),verbosity=0,...){
@@ -361,10 +390,11 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description List fine-tuning jobs from OpenAI.
-    #' @param verbosity Verbosity level for the API call.
-    #' @param ... Additional parameters as required by the OpenAI API.
-    #' @return A list of fine-tuning jobs.
+    #' @description List your organization's fine-tuning jobs
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param ... Additional parameters as required by the OpenAI API. For example:after,limit。
+    #' @return A list of paginated fine-tuning job objects.
     fine_tuning_jobs_list=function(verbosity=0,...){
       option = list(...)
       result <- private$api_call("fine_tuning_jobs", query = option, verbosity = verbosity)
@@ -374,10 +404,11 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description Retrieve details of a specific fine-tuning job from OpenAI.
-    #' @param job_id The ID of the fine-tuning job.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Details of the specified fine-tuning job.
+    #' @description Get info about a fine-tuning job.
+    #' @param job_id character Required. The ID of the fine-tuning job.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The fine-tuning object with the given ID.
     fine_tuning_jobs_retrieve=function(job_id,verbosity=0){
       result <- private$api_call("fine_tuning_jobs", paste0("/", job_id), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
@@ -386,10 +417,11 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description Cancel a specific fine-tuning job in OpenAI.
-    #' @param job_id The ID of the fine-tuning job to cancel.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return Response indicating the success or failure of the cancel operation.
+    #' @description Immediately cancel a fine-tune job.
+    #' @param job_id character Required. The ID of the fine-tuning job to cancel.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The cancelled fine-tuning object.
     fine_tuning_jobs_cancel=function(job_id,verbosity=0){
       result <- private$api_call("fine_tuning_jobs", paste0("/", job_id, "/", "cancel"), method = "POST", verbosity = verbosity)
       if (inherits(result, "openai_error")) {
@@ -398,22 +430,32 @@ openai <- R6Class(
         return(result$data)
       }
     },
-    #' @description Get events related to a specific fine-tuning job from OpenAI.
-    #' @param job_id The ID of the fine-tuning job to retrieve events for.
-    #' @param verbosity Verbosity level for the API call.
-    #' @return A list of events related to the specified fine-tuning job.
-    fine_tuning_jobs_events=function(job_id,verbosity=0){
-      result <- private$api_call("fine_tuning_jobs", paste0("/", job_id, "/", "events"),method = "GET", verbosity = verbosity)
+    #' @description Get status updates for a fine-tuning job.
+    #' @param job_id character Required. The ID of the fine-tuning job to get events for.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param ... Additional parameters as required by the OpenAI API. For example:after,limit。
+    #' @return A list of fine-tuning event objects.
+    fine_tuning_jobs_events=function(job_id,...,verbosity=0){
+      option = list(...)
+      result <- private$api_call("fine_tuning_jobs", query = option, paste0("/", job_id, "/", "events"),method = "GET", verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
         return(result$data)
       }
     },
-    #' @description Compute embeddings for input data using a specified model in OpenAI.
-    #' @param model The model to use for generating embeddings.
-    #' @param input Input data to generate embeddings for.
-    #' @param verbosity Verbosity level for the API call.
+    #' @description Creates an embedding vector representing the input text.
+    #' @param model character Required. ID of the model to use. You can use
+    #'              the List models API to see all of your available models,
+    #'              or see our Model overview for descriptions of them.
+    #' @param input character Required. Input text to embed, encoded as a string or array of tokens.
+    #'              To embed multiple inputs in a single request, pass an array of strings or array of token arrays.
+    #'              The input must not exceed the max input tokens for
+    #'              the model (8192 tokens for text-embedding-ada-002), cannot be an empty string,
+    #'              and any array must be 2048 dimensions or less.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:encoding_format;user....
     #' @return Embeddings for the input data.
     embeddings=function(model,input,verbosity=0,...){
@@ -428,12 +470,13 @@ openai <- R6Class(
       }
     },
     #' @description Generates audio from the input text.
-    #' @param model One of the available TTS models: tts-1 or tts-1-hd
-    #' @param input The text to generate audio for. The maximum length is 4096 characters.
-    #' @param voice The voice to use when generating the audio. Supported voices are alloy, echo, fable, onyx, nova, and shimmer.
-    #' @param verbosity Verbosity level for the API call.#'
-    #' @param stream Using the stream call, it will return raw data of the specified length,
-    #'      which can be saved in the set format such as mp3, etc. For details, please see the examples.
+    #' @param model character Required. One of the available TTS models: tts-1 or tts-1-hd
+    #' @param input character Required. The text to generate audio for. The maximum length is 4096 characters.
+    #' @param voice character Required. The voice to use when generating the audio. Supported voices are alloy, echo, fable, onyx, nova, and shimmer.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param stream logical. Using the stream call, it will return raw data of the specified length,
+    #'               which can be saved in the set format such as mp3, etc. For details, please see the examples.
     #' @param num The num parameter controls the number of raw entries returned by a stream in one go.
     #'            Note that this is different from the n parameter, which specifies the number of results returned.
     #'            For detailed information on the n parameter, please refer to OpenAI's API documentation.
@@ -457,9 +500,11 @@ openai <- R6Class(
       }
     },
     #' @description Transcribes audio into the input language.
-    #' @param path The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
-    #' @param model ID of the model to use. Only whisper-1 is currently available.
-    #' @param verbosity Verbosity level for the API call.
+    #' @param path character Required. The audio file object (not file name) to transcribe,
+    #'             in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
+    #' @param model character Required. ID of the model to use. Only whisper-1 is currently available.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:language;prompt;response_format;temperature....
     #' @return The transcribed text.
     audio_transcriptions=function(path,model="whisper-1",verbosity=0,...){
@@ -474,9 +519,11 @@ openai <- R6Class(
       }
     },
     #' @description Translates audio into English.
-    #' @param path The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
-    #' @param model ID of the model to use. Only whisper-1 is currently available.
-    #' @param verbosity Verbosity level for the API call.
+    #' @param path character Required. The audio file object (not file name) to transcribe,
+    #'             in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
+    #' @param model character Required. ID of the model to use. Only whisper-1 is currently available.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:prompt;response_format;temperature....
     #' @return The transcribed text.
     audio_translations=function(path,model="whisper-1",verbosity=0,...){
@@ -491,8 +538,10 @@ openai <- R6Class(
       }
     },
     #' @description Creates an image given a prompt.
-    #' @param prompt A text description of the desired image(s). The maximum length is 1000 characters for dall-e-2 and 4000 characters for dall-e-3
-    #' @param verbosity  Verbosity level for the API call.
+    #' @param prompt character Required. A text description of the desired image(s).
+    #'               The maximum length is 1000 characters for dall-e-2 and 4000 characters for dall-e-3
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ...  Additional parameters as required by the OpenAI API.For example:n;quality;response_format...
     #' @return Returns a list of image objects.
     images_generations=function(prompt,verbosity=0,...){
@@ -506,9 +555,11 @@ openai <- R6Class(
       }
     },
     #' @description Creates an edited or extended image given an original image and a prompt.
-    #' @param image The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask.
-    #' @param prompt A text description of the desired image(s). The maximum length is 1000 characters.
-    #' @param verbosity Verbosity level for the API call.
+    #' @param image character Required. The image to edit. Must be a valid PNG file, less than 4MB,
+    #'              and square. If mask is not provided, image must have transparency, which will be used as the mask.
+    #' @param prompt character Required. A text description of the desired image(s). The maximum length is 1000 characters.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ...  Additional parameters as required by the OpenAI API.For example:mask;model;n...
     #' @return Returns a list of image objects.
     images_edits=function(image,prompt,verbosity=0,...){
@@ -526,14 +577,145 @@ openai <- R6Class(
       }
     },
     #' @description Creates a variation of a given image.
-    #' @param image The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.
-    #' @param verbosity Verbosity level for the API call.
+    #' @param image character Required. The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ...  Additional parameters as required by the OpenAI API.For example:model;n;response_format
     #' @return Returns a list of image objects.
     images_variations=function(image,verbosity=0,...){
       option <- list(...)
       option$image<-curl::form_file(image)
       result<-private$file_call(endpoint = "images",path = "/variations",body = option,verbosity=verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Create an assistant with a model and instructions.
+    #' @param model character Required. ID of the model to use. You can use the List models API to see all of your available models,
+    #'             or see our Model overview for descriptions of them.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param ...  Additional parameters as required by the OpenAI API.For example:name;description;instructions;tools;file_ids;metadata
+    #' @return An assistant object.
+    assistants_create=function(model,verbosity,...){
+      option <- list(...)
+      option$model <- model
+      result <- private$api_call("assistants", body = option,method = "POST", headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieves an assistant.
+    #' @param assistant_id character Required. The ID of the assistant to retrieve.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The assistant object matching the specified ID.
+    assistants_retrieve=function(assistant_id,verbosity){
+      result <- private$api_call("assistants",path=paste0("/",assistant_id), body = option,method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Modifies an assistant.
+    #' @param assistant_id character Required. The ID of the assistant to modify.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param ...  Additional parameters as required by the OpenAI API.For example:model;name;description;instructions;tools;file_ids,metadata
+    #' @return The assistant object matching the specified ID.
+    assistants_modify=function(assistant_id,...){
+      option <- list(...)
+      result <- private$api_call("assistants",path=paste0("/",assistant_id), body = option,method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Delete an assistant.
+    #' @param assistant_id character Required. The ID of the assistant to delete.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return Deletion status
+    assistants_delete=function(assistant_id){
+      result <- private$api_call("assistants", paste0("/", assistant_id), method = "DELETE",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Returns a list of assistants
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param ...  Additional parameters as required by the OpenAI API.For example:limit;order;after;before;
+    #' @return A list of assistant objects.
+    assistants_list=function(...){
+      option <- list(...)
+      result <- private$api_call("assistants",query = option,method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Create an assistant file by attaching a File to an assistant.
+    #' @param assistant_id character Required. The ID of the assistant for which to create a File.
+    #' @param file_id character Required. A File ID (with purpose="assistants") that the assistant should use.
+    #'                Useful for tools like retrieval and code_interpreter that can access files.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return An assistant file object.
+    assistants_file_create=function(assistant_id,file_id,verbosity=0){
+      option <- list(file_id=file_id)
+      result<-private$api_call("assistants", paste0("/", assistant_id,"/files"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieves an AssistantFile.
+    #' @param assistant_id character Required. The ID of the assistant who the file belongs to.
+    #' @param file_id character Required. The ID of the file we're getting.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return The assistant file object matching the specified ID.
+    assistants_file_retrieve=function(assistant_id,file_id,verbosity=0){
+      result <- private$api_call("assistants", paste0("/", assistant_id,"/files/",file_id), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Delete an assistant file.
+    #' @param assistant_id character Required. The ID of the assistant who the file belongs to.
+    #' @param file_id character Required. The ID of the file we're getting.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @return Deletion status
+    assistants_file_delete=function(assistant_id,file_id,verbosity=0){
+      result <- private$api_call("assistants", paste0("/", assistant_id,"/files/",file_id), method = "DELETE", verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieve a list of files from OpenAI.
+    #' @param assistant_id character Required. The ID of the assistant who the file belongs to.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
+    #' @param ...  Additional parameters as required by the OpenAI API.For example:limit,order,after,before
+    #' @return A list of files.
+    assistants_file_list=function(assistant_id,verbosity=0,...){
+      result <- private$api_call("assistants", paste0("/", assistant_id,"/files"), method = "GET", verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{

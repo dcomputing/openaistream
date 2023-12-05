@@ -135,6 +135,15 @@ pic1<-aaa$images_generations(prompt = "A small bird flies over the ocean")
 \item \href{#method-openai-images_generations}{\code{openai$images_generations()}}
 \item \href{#method-openai-images_edits}{\code{openai$images_edits()}}
 \item \href{#method-openai-images_variations}{\code{openai$images_variations()}}
+\item \href{#method-openai-assistants_create}{\code{openai$assistants_create()}}
+\item \href{#method-openai-assistants_retrieve}{\code{openai$assistants_retrieve()}}
+\item \href{#method-openai-assistants_modify}{\code{openai$assistants_modify()}}
+\item \href{#method-openai-assistants_delete}{\code{openai$assistants_delete()}}
+\item \href{#method-openai-assistants_list}{\code{openai$assistants_list()}}
+\item \href{#method-openai-assistants_file_create}{\code{openai$assistants_file_create()}}
+\item \href{#method-openai-assistants_file_retrieve}{\code{openai$assistants_file_retrieve()}}
+\item \href{#method-openai-assistants_file_delete}{\code{openai$assistants_file_delete()}}
+\item \href{#method-openai-assistants_file_list}{\code{openai$assistants_file_list()}}
 \item \href{#method-openai-clone}{\code{openai$clone()}}
 }
 }
@@ -167,9 +176,9 @@ Configure the proxy settings.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{proxy_ip}}{The IP address of the proxy.}
+\item{\code{proxy_ip}}{character Required. The IP address of the proxy.}
 
-\item{\code{proxy_port}}{The port number of the proxy.}
+\item{\code{proxy_port}}{character Required. The port number of the proxy.}
 }
 \if{html}{\out{</div>}}
 }
@@ -178,7 +187,8 @@ Configure the proxy settings.
 \if{html}{\out{<a id="method-openai-get_model_list"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-get_model_list}{}}}
 \subsection{Method \code{get_model_list()}}{
-Retrieve a list of available models from OpenAI.
+Lists the currently available models, and provides basic information
+             about each one such as the owner and availability.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$get_model_list(verbosity = 0)}\if{html}{\out{</div>}}
 }
@@ -186,19 +196,21 @@ Retrieve a list of available models from OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list of available models.
+A list of model objects.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-get_model_retrieve"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-get_model_retrieve}{}}}
 \subsection{Method \code{get_model_retrieve()}}{
-Retrieve details of a specific model from OpenAI.
+Retrieves a model instance, providing basic information about
+             the model such as the owner and permissioning.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$get_model_retrieve(model, verbosity = 0)}\if{html}{\out{</div>}}
 }
@@ -206,43 +218,46 @@ Retrieve details of a specific model from OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model}}{The model ID.}
+\item{\code{model}}{character Required. The ID of the model to use for this request}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Details of the specified model.
+The model object matching the specified ID.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-fine_tuning_jobs_delete"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-fine_tuning_jobs_delete}{}}}
 \subsection{Method \code{fine_tuning_jobs_delete()}}{
-Delete a fine-tuned model from OpenAI.
+Delete a fine-tuned model. You must have the Owner role in
+             your organization to delete a model.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_delete(model_id, verbosity = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_delete(model, verbosity = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model_id}}{The ID of the file to delete.}
+\item{\code{model}}{character Required. The model to delete}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Response indicating the success or failure of the delete operation.
+Deletion status.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-get_completions_query"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-get_completions_query}{}}}
 \subsection{Method \code{get_completions_query()}}{
-Get completions for a given prompt using a specific model.
+Creates a completion for the provided prompt and parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$get_completions_query(
   prompt,
@@ -257,31 +272,36 @@ Get completions for a given prompt using a specific model.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{prompt}}{The input text to get completions for.}
+\item{\code{prompt}}{character Required. The prompt(s) to generate completions for, encoded as a string,
+array of strings, array of tokens, or array of token arrays. Note that <|endoftext|> is
+the document separator that the model sees during training, so if a prompt is not specified
+the model will generate as if from the beginning of a new document.}
 
-\item{\code{model}}{The model to use for generating completions.}
+\item{\code{model}}{character Required. The model to use for generating completions.}
 
-\item{\code{stream}}{A boolean indicating whether to stream the results.}
+\item{\code{stream}}{logical. Whether to stream back partial progress. If set, tokens will be sent
+as data-only server-sent events as they become available.}
 
 \item{\code{num}}{The num parameter controls the number of text entries returned by a stream in one go.
 Note that this is different from the n parameter, which specifies the number of results returned.
 For detailed information on the n parameter, please refer to OpenAI's API documentation.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:max_tokens;n;stop;temperature......}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Completions based on the input prompt.
+Returns a completion object, or a sequence of completion objects if the request is streamed.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-get_chat_completions_query"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-get_chat_completions_query}{}}}
 \subsection{Method \code{get_chat_completions_query()}}{
-Generate conversational completions using chat models.
+Creates a model response for the given chat conversation.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$get_chat_completions_query(
   messages,
@@ -296,31 +316,37 @@ Generate conversational completions using chat models.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{messages}}{A list of message objects, where each message has a role and content.}
+\item{\code{messages}}{list Required. A list of messages comprising the conversation so far.}
 
-\item{\code{model}}{The model to use for generating chat completions.}
+\item{\code{model}}{character Required. The model to use for generating chat completions.}
 
-\item{\code{stream}}{A boolean indicating whether to stream the results.}
+\item{\code{stream}}{logical. Whether to stream back partial progress. If set, tokens will be sent
+as data-only server-sent events as they become available.}
 
 \item{\code{num}}{The num parameter controls the number of text entries returned by a stream in one go.
 Note that this is different from the n parameter, which specifies the number of results returned.
 For detailed information on the n parameter, please refer to OpenAI's API documentation.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:max_tokens;n;stop;temperature......}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Completions based on the conversational context.
+Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-files_upload"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-files_upload}{}}}
 \subsection{Method \code{files_upload()}}{
-Upload a file to OpenAI.
+Upload a file that can be used across various endpoints. The size of all the
+             files uploaded by one organization can be up to 100 GB.The size of individual
+             files can be a maximum of 512 MB or 2 million tokens for Assistants.
+             See the Assistants Tools guide to learn more about the types of files supported.
+             The Fine-tuning API only supports .jsonl files.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$files_upload(path, verbosity = 0, purpose)}\if{html}{\out{</div>}}
 }
@@ -328,43 +354,49 @@ Upload a file to OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{Path to the file that needs to be uploaded.}
+\item{\code{path}}{character Required. Path to the file that needs to be uploaded.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
-\item{\code{purpose}}{Purpose of the file (e.g., "fine-tune").}
+\item{\code{purpose}}{The intended purpose of the uploaded file.
+Use "fine-tune" for Fine-tuning and "assistants" for Assistants and Messages.
+This allows us to validate the format of the uploaded file is correct for fine-tuning.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Response indicating the success or failure of the upload operation.
+The uploaded File object.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-files_get_list"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-files_get_list}{}}}
 \subsection{Method \code{files_get_list()}}{
-Retrieve a list of files from OpenAI.
+Returns a list of files that belong to the user's organization.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{openai$files_get_list(verbosity = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{openai$files_get_list(..., verbosity = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:purpose}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list of files.
+A list of File objects.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-files_delete"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-files_delete}{}}}
 \subsection{Method \code{files_delete()}}{
-Delete a file from OpenAI.
+Delete a file.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$files_delete(file_id, verbosity = 0)}\if{html}{\out{</div>}}
 }
@@ -372,21 +404,22 @@ Delete a file from OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{file_id}}{The ID of the file to delete.}
+\item{\code{file_id}}{character Required. The ID of the file to use for this request.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Response indicating the success or failure of the delete operation.
+Deletion status.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-files_retrieve"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-files_retrieve}{}}}
 \subsection{Method \code{files_retrieve()}}{
-Retrieve details of a specific file from OpenAI.
+Returns information about a specific file.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$files_retrieve(file_id, verbosity = 0)}\if{html}{\out{</div>}}
 }
@@ -394,21 +427,24 @@ Retrieve details of a specific file from OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{file_id}}{The ID of the file to retrieve details for.}
+\item{\code{file_id}}{character Required. The ID of the file to retrieve details for.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Details of the specified file.
+The File object matching the specified ID.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-fine_tuning_jobs_create"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-fine_tuning_jobs_create}{}}}
 \subsection{Method \code{fine_tuning_jobs_create()}}{
-Create a fine-tuning job in OpenAI.
+Creates a job that fine-tunes a specified model from a given dataset.
+             Response includes details of the enqueued job including job status and
+             the name of the fine-tuned models once complete.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_create(
   model,
@@ -422,13 +458,14 @@ Create a fine-tuning job in OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model}}{The model ID.}
+\item{\code{model}}{character Required. The model ID.}
 
-\item{\code{training_file}}{The file used for training.}
+\item{\code{training_file}}{character Required. The file used for training.}
 
-\item{\code{hyperparameters}}{params list for the fine-tuning include batch_size;learning_rate_multiplier;n_epochs.}
+\item{\code{hyperparameters}}{list. The hyperparameters used for the fine-tuning job. include batch_size;learning_rate_multiplier;n_epochs.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:validation_file......}
 }
@@ -442,7 +479,7 @@ Response indicating the success or failure of the fine-tuning job creation.
 \if{html}{\out{<a id="method-openai-fine_tuning_jobs_list"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-fine_tuning_jobs_list}{}}}
 \subsection{Method \code{fine_tuning_jobs_list()}}{
-List fine-tuning jobs from OpenAI.
+List your organization's fine-tuning jobs
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_list(verbosity = 0, ...)}\if{html}{\out{</div>}}
 }
@@ -450,21 +487,22 @@ List fine-tuning jobs from OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
-\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:after,limit。}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list of fine-tuning jobs.
+A list of paginated fine-tuning job objects.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-fine_tuning_jobs_retrieve"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-fine_tuning_jobs_retrieve}{}}}
 \subsection{Method \code{fine_tuning_jobs_retrieve()}}{
-Retrieve details of a specific fine-tuning job from OpenAI.
+Get info about a fine-tuning job.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_retrieve(job_id, verbosity = 0)}\if{html}{\out{</div>}}
 }
@@ -472,21 +510,22 @@ Retrieve details of a specific fine-tuning job from OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{job_id}}{The ID of the fine-tuning job.}
+\item{\code{job_id}}{character Required. The ID of the fine-tuning job.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Details of the specified fine-tuning job.
+The fine-tuning object with the given ID.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-fine_tuning_jobs_cancel"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-fine_tuning_jobs_cancel}{}}}
 \subsection{Method \code{fine_tuning_jobs_cancel()}}{
-Cancel a specific fine-tuning job in OpenAI.
+Immediately cancel a fine-tune job.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_cancel(job_id, verbosity = 0)}\if{html}{\out{</div>}}
 }
@@ -494,43 +533,47 @@ Cancel a specific fine-tuning job in OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{job_id}}{The ID of the fine-tuning job to cancel.}
+\item{\code{job_id}}{character Required. The ID of the fine-tuning job to cancel.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Response indicating the success or failure of the cancel operation.
+The cancelled fine-tuning object.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-fine_tuning_jobs_events"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-fine_tuning_jobs_events}{}}}
 \subsection{Method \code{fine_tuning_jobs_events()}}{
-Get events related to a specific fine-tuning job from OpenAI.
+Get status updates for a fine-tuning job.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_events(job_id, verbosity = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{openai$fine_tuning_jobs_events(job_id, ..., verbosity = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{job_id}}{The ID of the fine-tuning job to retrieve events for.}
+\item{\code{job_id}}{character Required. The ID of the fine-tuning job to get events for.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:after,limit。}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list of events related to the specified fine-tuning job.
+A list of fine-tuning event objects.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-openai-embeddings"></a>}}
 \if{latex}{\out{\hypertarget{method-openai-embeddings}{}}}
 \subsection{Method \code{embeddings()}}{
-Compute embeddings for input data using a specified model in OpenAI.
+Creates an embedding vector representing the input text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{openai$embeddings(model, input, verbosity = 0, ...)}\if{html}{\out{</div>}}
 }
@@ -538,11 +581,18 @@ Compute embeddings for input data using a specified model in OpenAI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model}}{The model to use for generating embeddings.}
+\item{\code{model}}{character Required. ID of the model to use. You can use
+the List models API to see all of your available models,
+or see our Model overview for descriptions of them.}
 
-\item{\code{input}}{Input data to generate embeddings for.}
+\item{\code{input}}{character Required. Input text to embed, encoded as a string or array of tokens.
+To embed multiple inputs in a single request, pass an array of strings or array of token arrays.
+The input must not exceed the max input tokens for
+the model (8192 tokens for text-embedding-ada-002), cannot be an empty string,
+and any array must be 2048 dimensions or less.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:encoding_format;user....}
 }
@@ -572,20 +622,21 @@ Generates audio from the input text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model}}{One of the available TTS models: tts-1 or tts-1-hd}
+\item{\code{model}}{character Required. One of the available TTS models: tts-1 or tts-1-hd}
 
-\item{\code{input}}{The text to generate audio for. The maximum length is 4096 characters.}
+\item{\code{input}}{character Required. The text to generate audio for. The maximum length is 4096 characters.}
 
-\item{\code{voice}}{The voice to use when generating the audio. Supported voices are alloy, echo, fable, onyx, nova, and shimmer.}
+\item{\code{voice}}{character Required. The voice to use when generating the audio. Supported voices are alloy, echo, fable, onyx, nova, and shimmer.}
 
-\item{\code{stream}}{Using the stream call, it will return raw data of the specified length,
+\item{\code{stream}}{logical. Using the stream call, it will return raw data of the specified length,
 which can be saved in the set format such as mp3, etc. For details, please see the examples.}
 
 \item{\code{num}}{The num parameter controls the number of raw entries returned by a stream in one go.
 Note that this is different from the n parameter, which specifies the number of results returned.
 For detailed information on the n parameter, please refer to OpenAI's API documentation.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.#'}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:response_format;speed....}
 }
@@ -607,11 +658,13 @@ Transcribes audio into the input language.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.}
+\item{\code{path}}{character Required. The audio file object (not file name) to transcribe,
+in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.}
 
-\item{\code{model}}{ID of the model to use. Only whisper-1 is currently available.}
+\item{\code{model}}{character Required. ID of the model to use. Only whisper-1 is currently available.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:language;prompt;response_format;temperature....}
 }
@@ -633,11 +686,13 @@ Translates audio into English.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.}
+\item{\code{path}}{character Required. The audio file object (not file name) to transcribe,
+in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.}
 
-\item{\code{model}}{ID of the model to use. Only whisper-1 is currently available.}
+\item{\code{model}}{character Required. ID of the model to use. Only whisper-1 is currently available.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:prompt;response_format;temperature....}
 }
@@ -659,9 +714,11 @@ Creates an image given a prompt.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{prompt}}{A text description of the desired image(s). The maximum length is 1000 characters for dall-e-2 and 4000 characters for dall-e-3}
+\item{\code{prompt}}{character Required. A text description of the desired image(s).
+The maximum length is 1000 characters for dall-e-2 and 4000 characters for dall-e-3}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:n;quality;response_format...}
 }
@@ -683,11 +740,13 @@ Creates an edited or extended image given an original image and a prompt.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{image}}{The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, image must have transparency, which will be used as the mask.}
+\item{\code{image}}{character Required. The image to edit. Must be a valid PNG file, less than 4MB,
+and square. If mask is not provided, image must have transparency, which will be used as the mask.}
 
-\item{\code{prompt}}{A text description of the desired image(s). The maximum length is 1000 characters.}
+\item{\code{prompt}}{character Required. A text description of the desired image(s). The maximum length is 1000 characters.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:mask;model;n...}
 }
@@ -709,9 +768,10 @@ Creates a variation of a given image.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{image}}{The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.}
+\item{\code{image}}{character Required. The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.}
 
-\item{\code{verbosity}}{Verbosity level for the API call.}
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
 \item{\code{...}}{Additional parameters as required by the OpenAI API.For example:model;n;response_format}
 }
@@ -719,6 +779,227 @@ Creates a variation of a given image.
 }
 \subsection{Returns}{
 Returns a list of image objects.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_create"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_create}{}}}
+\subsection{Method \code{assistants_create()}}{
+Create an assistant with a model and instructions.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_create(model, verbosity, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{model}}{character Required. ID of the model to use. You can use the List models API to see all of your available models,
+or see our Model overview for descriptions of them.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:name;description;instructions;tools;file_ids;metadata}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+An assistant object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_retrieve}{}}}
+\subsection{Method \code{assistants_retrieve()}}{
+Retrieves an assistant.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_retrieve(assistant_id, verbosity)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant to retrieve.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The assistant object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_modify"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_modify}{}}}
+\subsection{Method \code{assistants_modify()}}{
+Modifies an assistant.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_modify(assistant_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant to modify.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:model;name;description;instructions;tools;file_ids,metadata}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The assistant object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_delete"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_delete}{}}}
+\subsection{Method \code{assistants_delete()}}{
+Delete an assistant.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_delete(assistant_id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant to delete.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Deletion status
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_list}{}}}
+\subsection{Method \code{assistants_list()}}{
+Returns a list of assistants
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_list(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:limit;order;after;before;}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of assistant objects.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_file_create"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_file_create}{}}}
+\subsection{Method \code{assistants_file_create()}}{
+Create an assistant file by attaching a File to an assistant.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_file_create(assistant_id, file_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant for which to create a File.}
+
+\item{\code{file_id}}{character Required. A File ID (with purpose="assistants") that the assistant should use.
+Useful for tools like retrieval and code_interpreter that can access files.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+An assistant file object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_file_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_file_retrieve}{}}}
+\subsection{Method \code{assistants_file_retrieve()}}{
+Retrieves an AssistantFile.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_file_retrieve(assistant_id, file_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant who the file belongs to.}
+
+\item{\code{file_id}}{character Required. The ID of the file we're getting.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The assistant file object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_file_delete"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_file_delete}{}}}
+\subsection{Method \code{assistants_file_delete()}}{
+Delete an assistant file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_file_delete(assistant_id, file_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant who the file belongs to.}
+
+\item{\code{file_id}}{character Required. The ID of the file we're getting.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Deletion status
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-assistants_file_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-assistants_file_list}{}}}
+\subsection{Method \code{assistants_file_list()}}{
+Retrieve a list of files from OpenAI.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$assistants_file_list(assistant_id, verbosity = 0, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required. The ID of the assistant who the file belongs to.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:limit,order,after,before}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of files.
 }
 }
 \if{html}{\out{<hr>}}

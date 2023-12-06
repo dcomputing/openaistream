@@ -161,8 +161,8 @@ pic1<-aaa$images_generations(prompt = "A small bird flies over the ocean")
 \item \href{#method-openai-runs_submit_tool_outputs}{\code{openai$runs_submit_tool_outputs()}}
 \item \href{#method-openai-runs_cancel}{\code{openai$runs_cancel()}}
 \item \href{#method-openai-runs_create_tread}{\code{openai$runs_create_tread()}}
-\item \href{#method-openai-run_steps_retrieve}{\code{openai$run_steps_retrieve()}}
-\item \href{#method-openai-run_steps_list}{\code{openai$run_steps_list()}}
+\item \href{#method-openai-runs_steps_retrieve}{\code{openai$runs_steps_retrieve()}}
+\item \href{#method-openai-runs_steps_list}{\code{openai$runs_steps_list()}}
 \item \href{#method-openai-clone}{\code{openai$clone()}}
 }
 }
@@ -1457,12 +1457,12 @@ A run object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-openai-run_steps_retrieve"></a>}}
-\if{latex}{\out{\hypertarget{method-openai-run_steps_retrieve}{}}}
-\subsection{Method \code{run_steps_retrieve()}}{
+\if{html}{\out{<a id="method-openai-runs_steps_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_steps_retrieve}{}}}
+\subsection{Method \code{runs_steps_retrieve()}}{
 Retrieves a run step.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{openai$run_steps_retrieve(thread_id, run_id, step_id, verbosity = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_steps_retrieve(thread_id, run_id, step_id, verbosity = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1484,12 +1484,12 @@ The run step object matching the specified ID.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-openai-run_steps_list"></a>}}
-\if{latex}{\out{\hypertarget{method-openai-run_steps_list}{}}}
-\subsection{Method \code{run_steps_list()}}{
+\if{html}{\out{<a id="method-openai-runs_steps_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_steps_list}{}}}
+\subsection{Method \code{runs_steps_list()}}{
 Returns a list of run steps belonging to a run.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{openai$run_steps_list(thread_id, run_id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_steps_list(thread_id, run_id, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

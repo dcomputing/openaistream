@@ -988,7 +988,7 @@ openai <- R6Class(
     #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The run step object matching the specified ID.
-    run_steps_retrieve=function(thread_id,run_id,step_id,verbosity=0){
+    runs_steps_retrieve=function(thread_id,run_id,step_id,verbosity=0){
       result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps/",step_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="run_steps=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
@@ -1003,7 +1003,7 @@ openai <- R6Class(
     #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return A list of run step objects.
-    run_steps_list=function(thread_id,run_id,...){
+    runs_steps_list=function(thread_id,run_id,...){
       option <- list(...)
       result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="run_steps=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {

@@ -729,7 +729,6 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return A thread object.
     threads_create=function(...,verbosity=0){
-      browser()
       option <- list(...)
       result<-private$api_call("threads",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {

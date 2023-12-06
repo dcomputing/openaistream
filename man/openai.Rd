@@ -490,7 +490,7 @@ List your organization's fine-tuning jobs
 \item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
 2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
 
-\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:after,limit。}
+\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:after,limit.}
 }
 \if{html}{\out{</div>}}
 }
@@ -558,7 +558,7 @@ Get status updates for a fine-tuning job.
 \describe{
 \item{\code{job_id}}{character Required. The ID of the fine-tuning job to get events for.}
 
-\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:after,limit。}
+\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:after,limit.}
 
 \item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
 2:show headers and bodies;3: show headers, bodies, and curl status messages.).}

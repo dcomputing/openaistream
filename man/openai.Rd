@@ -144,6 +144,25 @@ pic1<-aaa$images_generations(prompt = "A small bird flies over the ocean")
 \item \href{#method-openai-assistants_file_retrieve}{\code{openai$assistants_file_retrieve()}}
 \item \href{#method-openai-assistants_file_delete}{\code{openai$assistants_file_delete()}}
 \item \href{#method-openai-assistants_file_list}{\code{openai$assistants_file_list()}}
+\item \href{#method-openai-threads_create}{\code{openai$threads_create()}}
+\item \href{#method-openai-threads_retrieve}{\code{openai$threads_retrieve()}}
+\item \href{#method-openai-threads_modify}{\code{openai$threads_modify()}}
+\item \href{#method-openai-threads_delete}{\code{openai$threads_delete()}}
+\item \href{#method-openai-messages_create}{\code{openai$messages_create()}}
+\item \href{#method-openai-messages_retrieve}{\code{openai$messages_retrieve()}}
+\item \href{#method-openai-messages_modify}{\code{openai$messages_modify()}}
+\item \href{#method-openai-messages_list}{\code{openai$messages_list()}}
+\item \href{#method-openai-messages_file_retrieve}{\code{openai$messages_file_retrieve()}}
+\item \href{#method-openai-messages_file_list}{\code{openai$messages_file_list()}}
+\item \href{#method-openai-runs_create}{\code{openai$runs_create()}}
+\item \href{#method-openai-runs_retrieve}{\code{openai$runs_retrieve()}}
+\item \href{#method-openai-runs_modify}{\code{openai$runs_modify()}}
+\item \href{#method-openai-runs_list}{\code{openai$runs_list()}}
+\item \href{#method-openai-runs_submit_tool_outputs}{\code{openai$runs_submit_tool_outputs()}}
+\item \href{#method-openai-runs_cancel}{\code{openai$runs_cancel()}}
+\item \href{#method-openai-runs_create_tread}{\code{openai$runs_create_tread()}}
+\item \href{#method-openai-run_steps_retrieve}{\code{openai$run_steps_retrieve()}}
+\item \href{#method-openai-run_steps_list}{\code{openai$run_steps_list()}}
 \item \href{#method-openai-clone}{\code{openai$clone()}}
 }
 }
@@ -1000,6 +1019,495 @@ Retrieve a list of files from OpenAI.
 }
 \subsection{Returns}{
 A list of files.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-threads_create"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-threads_create}{}}}
+\subsection{Method \code{threads_create()}}{
+Create a thread.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$threads_create(..., verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:messages;name;metadata}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A thread object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-threads_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-threads_retrieve}{}}}
+\subsection{Method \code{threads_retrieve()}}{
+Retrieves a thread.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$threads_retrieve(thread_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread to retrieve.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The thread object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-threads_modify"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-threads_modify}{}}}
+\subsection{Method \code{threads_modify()}}{
+Modifies a thread.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$threads_modify(thread_id, ..., verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{The ID of the thread to modify. Only the metadata can be modified.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:metadata}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The modified thread object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-threads_delete"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-threads_delete}{}}}
+\subsection{Method \code{threads_delete()}}{
+Delete a thread.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$threads_delete(thread_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread to delete.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Deletion status.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-messages_create"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-messages_create}{}}}
+\subsection{Method \code{messages_create()}}{
+Create a message.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$messages_create(thread_id, role, content, verbosity = 0, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread to create a message for.}
+
+\item{\code{role}}{character Required. The role of the entity that is creating the message. Currently only user is supported.}
+
+\item{\code{content}}{character Required. The content of the message.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:file_ids,metadata}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A message object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-messages_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-messages_retrieve}{}}}
+\subsection{Method \code{messages_retrieve()}}{
+Retrieve a message.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$messages_retrieve(thread_id, message_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread the message belongs to.}
+
+\item{\code{message_id}}{character Required. The ID of the message to retrieve.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The message object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-messages_modify"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-messages_modify}{}}}
+\subsection{Method \code{messages_modify()}}{
+Modifies a message.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$messages_modify(thread_id, message_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread the message belongs to.}
+
+\item{\code{message_id}}{character Required. The ID of the message to retrieve.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API. For example:metadata}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The modified message object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-messages_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-messages_list}{}}}
+\subsection{Method \code{messages_list()}}{
+Returns a list of messages for a given thread.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$messages_list(thread_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread the messages belong to.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of message objects.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-messages_file_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-messages_file_retrieve}{}}}
+\subsection{Method \code{messages_file_retrieve()}}{
+Retrieves a message file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$messages_file_retrieve(thread_id, message_id, file_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread the message belongs to.}
+
+\item{\code{message_id}}{character Required. The ID of the message the file belongs to.}
+
+\item{\code{file_id}}{character Required The ID of the file being retrieved.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The message file object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-messages_file_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-messages_file_list}{}}}
+\subsection{Method \code{messages_file_list()}}{
+Returns a list of message files.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$messages_file_list(thread_id, message_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread the message belongs to.}
+
+\item{\code{message_id}}{character Required. The ID of the message the file belongs to.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of message file objects.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_create"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_create}{}}}
+\subsection{Method \code{runs_create()}}{
+Create a run.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_create(thread_id, assistant_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread to run.}
+
+\item{\code{assistant_id}}{character Required. The ID of the assistant to use to execute this run.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.For example:model,instructions,tools,metadata}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A run object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_retrieve}{}}}
+\subsection{Method \code{runs_retrieve()}}{
+Retrieves a run.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_retrieve(thread_id, run_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread the run belongs to.}
+
+\item{\code{run_id}}{character Required The ID of the run to retrieve.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The run object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_modify"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_modify}{}}}
+\subsection{Method \code{runs_modify()}}{
+Modifies a run.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_modify(thread_id, run_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread the run belongs to.}
+
+\item{\code{run_id}}{character Required The ID of the run to retrieve.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The modified run object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_list}{}}}
+\subsection{Method \code{runs_list()}}{
+Returns a list of runs for a given thread.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_list(thread_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread the run belongs to.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of run objects.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_submit_tool_outputs"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_submit_tool_outputs}{}}}
+\subsection{Method \code{runs_submit_tool_outputs()}}{
+When a run has the status: "requires_action" and required_action.type is submit_tool_outputs,
+             this endpoint can be used to submit the outputs from the tool calls once they're all completed.
+             All outputs must be submitted in a single request.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_submit_tool_outputs(thread_id, run_id, tool_outputs, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread the run belongs to.}
+
+\item{\code{run_id}}{character Required The ID of the run to retrieve.}
+
+\item{\code{tool_outputs}}{character Required. A list of tools for which the outputs are being submitted.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The modified run object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_cancel"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_cancel}{}}}
+\subsection{Method \code{runs_cancel()}}{
+Cancels a run that is in_progress.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_cancel(thread_id, run_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread the run belongs to.}
+
+\item{\code{run_id}}{character Required The ID of the run to retrieve.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The modified run object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-runs_create_tread"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-runs_create_tread}{}}}
+\subsection{Method \code{runs_create_tread()}}{
+Create a thread and run it in one request.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$runs_create_tread(assistant_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assistant_id}}{character Required The ID of the assistant to use to execute this run.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A run object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-run_steps_retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-run_steps_retrieve}{}}}
+\subsection{Method \code{run_steps_retrieve()}}{
+Retrieves a run step.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$run_steps_retrieve(thread_id, run_id, step_id, verbosity = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required. The ID of the thread to which the run and run step belongs.}
+
+\item{\code{run_id}}{character Required. The ID of the run the step belongs to.}
+
+\item{\code{step_id}}{character Required. The ID of the step to retrieve.}
+
+\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The run step object matching the specified ID.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-openai-run_steps_list"></a>}}
+\if{latex}{\out{\hypertarget{method-openai-run_steps_list}{}}}
+\subsection{Method \code{run_steps_list()}}{
+Returns a list of run steps belonging to a run.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{openai$run_steps_list(thread_id, run_id, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{thread_id}}{character Required The ID of the thread the run belongs to.}
+
+\item{\code{run_id}}{character Required The ID of the run the step belongs to.}
+
+\item{\code{...}}{Additional parameters as required by the OpenAI API.}
+
+\item{\code{verbosity}}{numeric Verbosity level for the API call(0:no output;1:show headers;
+2:show headers and bodies;3: show headers, bodies, and curl status messages.)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of run step objects.
 }
 }
 \if{html}{\out{<hr>}}

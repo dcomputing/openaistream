@@ -379,7 +379,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:validation_file......
     #' @return Response indicating the success or failure of the fine-tuning job creation.
-    fine_tuning_jobs_create=function(model,training_file,hyperparameters=list(n_epochs=1),verbosity=0,...){
+    fine_tuning_jobs_create=function(model,training_file,hyperparameters=list(n_epochs=1),...,verbosity=0){
       option <- list(...)
       option$model <- model
       option$training_file <- training_file
@@ -459,7 +459,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:encoding_format;user....
     #' @return Embeddings for the input data.
-    embeddings=function(model,input,verbosity=0,...){
+    embeddings=function(model,input,...,verbosity=0){
       option <- list(...)
       option$model <- model
       option$input <- input
@@ -483,7 +483,7 @@ openai <- R6Class(
     #'            For detailed information on the n parameter, please refer to OpenAI's API documentation.
     #' @param ... Additional parameters as required by the OpenAI API.For example:response_format;speed....
     #' @return The audio file content.
-    audio_speech=function(model="tts-1",input,voice="alloy",stream=F,num=100,verbosity=0,...){
+    audio_speech=function(model="tts-1",input,voice="alloy",stream=F,num=100,...,verbosity=0){
       option <- list(...)
       option$model <- model
       option$input <- input
@@ -508,7 +508,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @param ... Additional parameters as required by the OpenAI API.For example:language;prompt;response_format;temperature....
     #' @return The transcribed text.
-    audio_transcriptions=function(path,model="whisper-1",verbosity=0,...){
+    audio_transcriptions=function(path,model="whisper-1",...,verbosity=0){
       option <- list(...)
       option$model <- model
       option$file <- curl::form_file(path)
@@ -688,7 +688,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @return The assistant file object matching the specified ID.
     assistants_file_retrieve=function(assistant_id,file_id,verbosity=0){
-      result <- private$api_call("assistants", paste0("/", assistant_id,"/files/",file_id), verbosity = verbosity)
+      result <- private$api_call("assistants", paste0("/", assistant_id,"/files/",file_id),headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -702,7 +702,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @return Deletion status
     assistants_file_delete=function(assistant_id,file_id,verbosity=0){
-      result <- private$api_call("assistants", paste0("/", assistant_id,"/files/",file_id), method = "DELETE", verbosity = verbosity)
+      result <- private$api_call("assistants", paste0("/", assistant_id,"/files/",file_id), method = "DELETE",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -716,7 +716,7 @@ openai <- R6Class(
     #' @param ...  Additional parameters as required by the OpenAI API.For example:limit,order,after,before
     #' @return A list of files.
     assistants_file_list=function(assistant_id,...,verbosity=0){
-      result <- private$api_call("assistants", paste0("/", assistant_id,"/files"), method = "GET", verbosity = verbosity)
+      result <- private$api_call("assistants", paste0("/", assistant_id,"/files"), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -729,8 +729,9 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return A thread object.
     threads_create=function(...,verbosity=0){
+      browser()
       option <- list(...)
-      result<-private$api_call("threads",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result<-private$api_call("threads",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -743,7 +744,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The thread object matching the specified ID.
     threads_retrieve=function(thread_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -758,7 +759,7 @@ openai <- R6Class(
     #' @return The modified thread object matching the specified ID.
     threads_modify=function(thread_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -771,7 +772,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return Deletion status.
     threads_delete=function(thread_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id), method = "DELETE",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id), method = "DELETE",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -790,7 +791,7 @@ openai <- R6Class(
       option <- list(...)
       option$role <- role
       option$content <- content
-      result<-private$api_call("threads", paste0("/", thread_id,"/messages"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result<-private$api_call("threads", paste0("/", thread_id,"/messages"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -804,7 +805,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The message object matching the specified ID.
     messages_retrieve=function(thread_id,message_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -820,7 +821,7 @@ openai <- R6Class(
     #' @return The modified message object.
     messages_modify=function(thread_id,message_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -835,7 +836,7 @@ openai <- R6Class(
     #' @return A list of message objects.
     messages_list=function(thread_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/messages"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -849,7 +850,7 @@ openai <- R6Class(
     #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
     #' @return The message file object.
     messages_file_retrieve=function(thread_id,message_id,file_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id,"/files/",file_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id,"/files/",file_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -864,7 +865,7 @@ openai <- R6Class(
     #' @return A list of message file objects.
     messages_file_list=function(thread_id,message_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id,"/files"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id,"/files"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -881,7 +882,7 @@ openai <- R6Class(
     runs_create=function(thread_id,assistant_id,...,verbosity=0){
       option <- list(...)
       option$assistant_id <- assistant_id
-      result<-private$api_call("threads", paste0("/", thread_id,"/runs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result<-private$api_call("threads", paste0("/", thread_id,"/runs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -895,7 +896,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The run object matching the specified ID.
     runs_retrieve=function(thread_id,run_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -911,7 +912,7 @@ openai <- R6Class(
     #' @return The modified run object matching the specified ID.
     runs_modify=function(thread_id,run_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -926,7 +927,7 @@ openai <- R6Class(
     #' @return A list of run objects.
     runs_list=function(thread_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -944,7 +945,7 @@ openai <- R6Class(
     #' @return The modified run object matching the specified ID.
     runs_submit_tool_outputs=function(thread_id,run_id,tool_outputs,verbosity=0){
       option <- list(tool_outputs=tool_outputs)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/submit_tool_outputs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/submit_tool_outputs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -958,7 +959,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The modified run object matching the specified ID.
     runs_cancel=function(thread_id,run_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/cancel"), method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/cancel"), method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -974,7 +975,7 @@ openai <- R6Class(
     runs_create_tread=function(assistant_id,...,verbosity=0){
       option <- list(...)
       option$assistant_id <- assistant_id
-      result<-private$api_call("runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      result<-private$api_call("runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -989,7 +990,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The run step object matching the specified ID.
     runs_steps_retrieve=function(thread_id,run_id,step_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps/",step_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="run_steps=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps/",step_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -1005,7 +1006,7 @@ openai <- R6Class(
     #' @return A list of run step objects.
     runs_steps_list=function(thread_id,run_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="run_steps=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{

@@ -118,7 +118,8 @@ openai <- R6Class(
       embeddings = "https://api.openai.com/v1/embeddings",
       audio = "https://api.openai.com/v1/audio",
       images = "https://api.openai.com/v1/images",
-      assistants = "https://api.openai.com/v1/assistants"
+      assistants = "https://api.openai.com/v1/assistants",
+      threads = "https://api.openai.com/v1/threads",
     ),
     #base_call
     base_call = function(endpoint, path="", body=NULL, method="GET", headers=list(), query=list()){
@@ -716,6 +717,295 @@ openai <- R6Class(
     #' @return A list of files.
     assistants_file_list=function(assistant_id,verbosity=0,...){
       result <- private$api_call("assistants", paste0("/", assistant_id,"/files"), method = "GET", verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Create a thread.
+    #' @param ... Additional parameters as required by the OpenAI API.For example:messages;name;metadata
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return A thread object.
+    threads_create=function(...,verbosity=0){
+      option <- list(...)
+      result<-private$api_call("threads",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieves a thread.
+    #' @param thread_id character Required. The ID of the thread to retrieve.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The thread object matching the specified ID.
+    threads_retrieve=function(thread_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Modifies a thread.
+    #' @param thread_id The ID of the thread to modify. Only the metadata can be modified.
+    #' @param ... Additional parameters as required by the OpenAI API.For example:metadata
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The modified thread object matching the specified ID.
+    threads_modify=function(thread_id,...,verbosity=0){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Delete a thread.
+    #' @param thread_id character Required The ID of the thread to delete.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return Deletion status.
+    threads_delete=function(thread_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id), method = "DELETE",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Create a message.
+    #' @param thread_id character Required. The ID of the thread to create a message for.
+    #' @param role character Required. The role of the entity that is creating the message. Currently only user is supported.
+    #' @param content character Required. The content of the message.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @param ...  Additional parameters as required by the OpenAI API. For example:file_ids,metadata
+    #' @return A message object.
+    messages_create=function(thread_id,role,content,verbosity=0,...){
+      option <- list(...)
+      option$role <- role
+      option$content <- content
+      result<-private$api_call("threads", paste0("/", thread_id,"/messages"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieve a message.
+    #' @param thread_id character Required. The ID of the thread the message belongs to.
+    #' @param message_id character Required. The ID of the message to retrieve.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The message object matching the specified ID.
+    messages_retrieve=function(thread_id,message_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Modifies a message.
+    #' @param thread_id character Required. The ID of the thread the message belongs to.
+    #' @param message_id character Required. The ID of the message to retrieve.
+    #' @param ... Additional parameters as required by the OpenAI API. For example:metadata
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The modified message object.
+    messages_modify=function(thread_id,message_id,...){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Returns a list of messages for a given thread.
+    #' @param thread_id character Required. The ID of the thread the messages belong to.
+    #' @param ... Additional parameters as required by the OpenAI API.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return A list of message objects.
+    messages_list=function(thread_id,...){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieves a message file.
+    #' @param thread_id character Required. The ID of the thread the message belongs to.
+    #' @param message_id character Required. The ID of the message the file belongs to.
+    #' @param file_id character Required The ID of the file being retrieved.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #' @return The message file object.
+    messages_file_retrieve=function(thread_id,message_id,file_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id,"/files/",file_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Returns a list of message files.
+    #' @param thread_id character Required. The ID of the thread the message belongs to.
+    #' @param message_id character Required. The ID of the message the file belongs to.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #' @param ... Additional parameters as required by the OpenAI API.
+    #' @return A list of message file objects.
+    messages_file_list=function(thread_id,message_id,...){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id,"/messages/",message_id,"/files"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="messages=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Create a run.
+    #' @param thread_id character Required. The ID of the thread to run.
+    #' @param assistant_id character Required. The ID of the assistant to use to execute this run.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @param ... Additional parameters as required by the OpenAI API.For example:model,instructions,tools,metadata
+    #' @return A run object.
+    runs_create=function(thread_id,assistant_id,...){
+      option <- list(...)
+      option$assistant_id <- assistant_id
+      result<-private$api_call("threads", paste0("/", thread_id,"/runs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieves a run.
+    #' @param thread_id character Required The ID of the thread the run belongs to.
+    #' @param run_id character Required The ID of the run to retrieve.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The run object matching the specified ID.
+    runs_retrieve=function(thread_id,run_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Modifies a run.
+    #' @param thread_id character Required The ID of the thread the run belongs to.
+    #' @param run_id character Required The ID of the run to retrieve.
+    #' @param ... Additional parameters as required by the OpenAI API.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The modified run object matching the specified ID.
+    runs_modify=function(thread_id,run_id,...){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Returns a list of runs for a given thread.
+    #' @param thread_id character Required The ID of the thread the run belongs to.
+    #' @param ... Additional parameters as required by the OpenAI API.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return A list of run objects.
+    runs_list=function(thread_id,...){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description When a run has the status: "requires_action" and required_action.type is submit_tool_outputs,
+    #'              this endpoint can be used to submit the outputs from the tool calls once they're all completed.
+    #'              All outputs must be submitted in a single request.
+    #' @param thread_id character Required The ID of the thread the run belongs to.
+    #' @param run_id character Required The ID of the run to retrieve.
+    #' @param tool_outputs character Required. A list of tools for which the outputs are being submitted.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The modified run object matching the specified ID.
+    runs_submit_tool_outputs=function(thread_id,run_id,tool_outputs,verbosity=0){
+      option <- list(tool_outputs=tool_outputs)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/submit_tool_outputs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Cancels a run that is in_progress.
+    #' @param thread_id character Required The ID of the thread the run belongs to.
+    #' @param run_id character Required The ID of the run to retrieve.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The modified run object matching the specified ID.
+    runs_cancel=function(thread_id,run_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/cancel"), method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Create a thread and run it in one request.
+    #' @param assistant_id character Required The ID of the assistant to use to execute this run.
+    #' @param ... Additional parameters as required by the OpenAI API.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return A run object.
+    runs_create_tread=function(assistant_id,...){
+      option <- list(...)
+      option$assistant_id <- assistant_id
+      result<-private$api_call("runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="runs=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Retrieves a run step.
+    #' @param thread_id character Required. The ID of the thread to which the run and run step belongs.
+    #' @param run_id character Required. The ID of the run the step belongs to.
+    #' @param step_id character Required. The ID of the step to retrieve.
+    #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return The run step object matching the specified ID.
+    run_steps_retrieve=function(thread_id,run_id,step_id,verbosity=0){
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps/",step_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="run_steps=v1"), verbosity = verbosity)
+      if (inherits(result, "openai_error")) {
+        return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
+      }else{
+        return(result$data)
+      }
+    },
+    #' @description Returns a list of run steps belonging to a run.
+    #' @param thread_id character Required The ID of the thread the run belongs to.
+    #' @param run_id character Required The ID of the run the step belongs to.
+    #' @param ... Additional parameters as required by the OpenAI API.
+    #' @param verbosity numeric Verbosity level for the API call(0:no output;1:show headers;
+    #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
+    #' @return A list of run step objects.
+    run_steps_list=function(thread_id,run_id,...){
+      option <- list(...)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="run_steps=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{

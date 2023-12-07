@@ -974,7 +974,7 @@ openai <- R6Class(
     runs_create_tread=function(assistant_id,...,verbosity=0){
       option <- list(...)
       option$assistant_id <- assistant_id
-      result<-private$api_call("runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result<-private$api_call("threads",path="/runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{

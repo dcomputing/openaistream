@@ -258,6 +258,8 @@ openai <- R6Class(
     #'              as data-only server-sent events as they become available.
     #' @param n integer. How many chat completion choices to generate for each input message. Note that you will be
     #'           charged based on the number of generated tokens across all of the choices. Keep n as 1 to minimize costs.
+    #'           NOTE: The parameter sometimes fails to work when 'num' is not assigned a value, and the reason for this 
+    #'           is currently unclear. When failure occurs, try assigning any integer greater than 0 to the 'num' parameter.
     #' @param num The num parameter controls the number of text entries returned by a stream in one go.
     #'            Note that this is different from the n parameter, which specifies the number of results returned.
     #'            For detailed information on the n parameter, please refer to OpenAI's API documentation.
@@ -290,6 +292,8 @@ openai <- R6Class(
     #'              as data-only server-sent events as they become available.
     #' @param n integer. How many chat completion choices to generate for each input message. Note that you will be
     #'           charged based on the number of generated tokens across all of the choices. Keep n as 1 to minimize costs.
+    #'           NOTE: The parameter sometimes fails to work when 'num' is not assigned a value, and the reason for this 
+    #'           is currently unclear. When failure occurs, try assigning any integer greater than 0 to the 'num' parameter.
     #' @param num The num parameter controls the number of text entries returned by a stream in one go.
     #'            Note that this is different from the n parameter, which specifies the number of results returned.
     #'            For detailed information on the n parameter, please refer to OpenAI's API documentation.

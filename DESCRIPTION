@@ -17,5 +17,7 @@ Depends:
   iterators (>= 1.0.14),
   curl (>= 5.1.0)
 Suggests:
-  png (>= 0.1-8)
+  png (>= 0.1-8),
+  testthat,
+  covr
 RoxygenNote: 7.2.3

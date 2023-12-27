@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: openai_env
     steps:
-      - name: Use OpenAI Key
-        run: echo "Using OpenAI API Key $OPENAI_API_KEY"
+    - name: Use OpenAI Key
+      run: echo "Using OpenAI API Key $OPENAI_API_KEY"
     steps:
     - uses: actions/checkout@v3
     - uses: r-lib/actions/setup-r@v2

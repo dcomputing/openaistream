@@ -14,13 +14,13 @@ jobs:
     - uses: r-lib/actions/setup-r-dependencies@v2
       with:
         extra-packages: any::rcmdcheck
+        extra-packages: any::covr
         needs: check
     - uses: r-lib/actions/check-r-package@v2
       with:
         args: 'c("--no-manual", "--as-cran")'
         error-on: '"error"'
         check-dir: '"check"'
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run tests and upload coverage to Codecov
+      run: covr::codecov(quiet = FALSE)
+      shell: Rscript {0}

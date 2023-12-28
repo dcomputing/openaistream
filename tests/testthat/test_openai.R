@@ -58,6 +58,12 @@ test_that("test_up_fileload",{
   res<-handle_openai$files_upload(path = train_file_path,purpose = "fine-tune",verbosity = 5)
   expect_true(!res$success)
 
+  file_list<-handle_openai$files_get_list(verbosity = 0)
+  expect_null(file_list$success)
+  #error test
+  res<-handle_openai$files_get_list(verbosity = 5)
+  expect_true(!res$success)
+
   file_mes<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 0)
   #error test
   res<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 5)

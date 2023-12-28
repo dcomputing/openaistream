@@ -54,9 +54,21 @@ test_that("test_up_fileload",{
   train_file_path<-system.file("exdata","train.jsonl", package = "openaistream")
   file_id <- handle_openai$files_upload(path = train_file_path,purpose = "fine-tune")
   expect_equal(file_id$filename,"train.jsonl")
+  #error test
+  res<-handle_openai$files_upload(path = train_file_path,purpose = "fine-tune",verbosity = 5)
+  expect_true(!res$success)
+
   file_mes<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 0)
+  #error test
+  res<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 5)
+  expect_true(!res$success)
+
   expect_equal(file_mes$id,file_id$id)
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
+  #error test
+  res<-handle_openai$files_delete(file_id$id, verbosity = 5)
+  expect_true(!res$success)
+
   expect_true(del_res$deleted)
 })
 

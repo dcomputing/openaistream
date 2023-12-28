@@ -52,6 +52,8 @@ test_that("test_up_fileload",{
     handle_openai$set_proxy("127.0.0.1",10890)
   }
   train_file_path<-system.file("exdata","train.jsonl", package = "openaistream")
+
+
   file_id <- handle_openai$files_upload(path = train_file_path,purpose = "fine-tune")
   expect_equal(file_id$filename,"train.jsonl")
   #error test
@@ -65,17 +67,38 @@ test_that("test_up_fileload",{
   expect_true(!res$success)
 
   file_mes<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 0)
+  expect_equal(file_mes$id,file_id$id)
   #error test
   res<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 5)
   expect_true(!res$success)
 
-  expect_equal(file_mes$id,file_id$id)
+  #
+  Sys.time(3)
+  job<-handle_openai$fine_tuning_jobs_create(model = "gpt-3.5-turbo",training_file = file_id$id)
+  expect_equal(job$training_file,file_id$id)
+
+  #error test
+  res<-handle_openai$fine_tuning_jobs_create(model = "gpt-3.5-turbo",training_file = file_id$id,verbosity = 3)
+  expect_true(!res$success)
+
+  job_events<-handle_openai$fine_tuning_jobs_events(job$id, verbosity = 0)
+  expect_contains(names(job_events$data),"data")
+
+  #error test
+  res<-handle_openai$fine_tuning_jobs_events(job$id, verbosity = 4)
+  expect_true(!res$success)
+
+  job_retrieve<-handle_openai$fine_tuning_jobs_retrieve(job$id, verbosity = 0)
+  expect_equal(job_retrieve$id,job$id)
+
+  res<-handle_openai$fine_tuning_jobs_retrieve(job$id, verbosity = 4)
+  expect_true(!res$success)
+
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
+  expect_true(del_res$deleted)
   #error test
   res<-handle_openai$files_delete(file_id$id, verbosity = 5)
   expect_true(!res$success)
-
-  expect_true(del_res$deleted)
 })
 
 

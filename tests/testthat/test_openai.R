@@ -16,4 +16,18 @@ test_that("init the openai api", {
     "get_completions_query","fine_tuning_jobs_delete","get_model_retrieve","get_model_list",
     "set_proxy")
     expect_in(fc,names(handle_openai))
+    if(Sys.getenv("USE_PROXY")=="TRUE"){
+      handle_openai$set_proxy("127.0.0.1", 10890)
+    }
+    res<-handle_openai$get_model_list()
+    expect_null(res$success)
 })
+
+test_that("test set_proxy", {
+  handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
+  handle_openai$set_proxy("127.0.0.1", 10890)
+  expect_silent(handle_openai$set_proxy("127.0.0.1", 10890))
+})
+
+
+

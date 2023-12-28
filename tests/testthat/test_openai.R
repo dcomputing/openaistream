@@ -43,7 +43,19 @@ test_that("test set_proxy", {
   expect_error(handle_openai$set_proxy("127.0sdha", 10890))
   expect_error(handle_openai$set_proxy("127.0.0.1", "sdsd"))
   expect_error(handle_openai$set_proxy("127.0.0.1", 8217321))
-  expect_error(handle_openai$set_proxy("127200.0.0.1", 10890))
+  expect_error(handle_openai$set_proxy("999.0.888.1", 10890))
+})
+
+test_that("test_up_fileload",{
+  handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
+  handle_openai$set_proxy("127.0.0.1",10890)
+  train_file_path<-system.file("exdata","train.jsonl", package = "openaistream")
+  file_id <- handle_openai$files_upload(path = train_file_path,purpose = "fine-tune")
+  expect_equal(file_id$filename,"train.jsonl")
+  file_mes<-handle_openai$files_retrieve(file_id=file_id$id, verbosity = 0)
+  expect_equal(file_mes$id,file_id$id)
+  del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
+  expect_true(del_res$deleted)
 })
 
 

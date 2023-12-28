@@ -22,6 +22,7 @@ test_that("init the openai api", {
 
     res<-handle_openai$get_model_list()
     print(res)
+    print(Sys.getenv("USE_PROXY"))
     expect_null(res$success)
 })
 

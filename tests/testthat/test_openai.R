@@ -78,7 +78,7 @@ test_that("test_up_fileload",{
   expect_equal(job$training_file,file_id$id)
 
   #error test
-  res<-handle_openai$fine_tuning_jobs_create(model = "gpt-3.5-turbo",training_file = file_id$id,verbosity = 3)
+  res<-handle_openai$fine_tuning_jobs_create(model = "gpt-3.5-turbo",training_file = file_id$id,verbosity = 4)
   expect_true(!res$success)
 
   job_events<-handle_openai$fine_tuning_jobs_events(job$id, verbosity = 0)

@@ -91,11 +91,24 @@ test_that("test_up_fileload",{
   job_retrieve<-handle_openai$fine_tuning_jobs_retrieve(job$id, verbosity = 0)
   expect_equal(job_retrieve$id,job$id)
 
+  #error test
   res<-handle_openai$fine_tuning_jobs_retrieve(job$id, verbosity = 4)
   expect_true(!res$success)
 
+  job_list<-handle_openai$fine_tuning_jobs_list()
+  expect_contains(names(job_list$data),"data")
+
+  #error test
+  res<-handle_openai$fine_tuning_jobs_list(verbosity = 4)
+  expect_true(!res$success)
+
+  job_status<-handle_openai$fine_tuning_jobs_cancel(job$id)
+  #job_status
+
+
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
   expect_true(del_res$deleted)
+
   #error test
   res<-handle_openai$files_delete(file_id$id, verbosity = 5)
   expect_true(!res$success)

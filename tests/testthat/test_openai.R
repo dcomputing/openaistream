@@ -22,8 +22,6 @@ test_that("init the openai api", {
     res<-handle_openai$get_model_list(verbosity = 100)
     expect_true(!res$success)
     res<-handle_openai$get_model_list()
-    print(res)
-    print(Sys.getenv("USE_PROXY"))
     expect_null(res$success)
 })
 
@@ -32,7 +30,10 @@ test_that("test get_model_retrieve",{
   if(Sys.getenv("USE_PROXY")=="TRUE"){
     handle_openai$set_proxy("127.0.0.1", 10890)
   }
-  res<-handle_openai$get_model_retrieve(model = "gpt-3.5-turbo",verbosity = 3)
+  res<-handle_openai$get_model_retrieve(model = "gpt-3.5-turbo",verbosity = 0)
+  expect_equal(res$id,"gpt-3.5-turbo")
+  res<-handle_openai$get_model_retrieve(model = "gpt-3.5-turbo",verbosity = 200)
+  expect_true(!res$success)
 })
 
 test_that("test set_proxy", {
@@ -44,7 +45,6 @@ test_that("test set_proxy", {
   expect_error(handle_openai$set_proxy("127.0.0.1", 8217321))
   expect_error(handle_openai$set_proxy("127200.0.0.1", 10890))
 })
-
 
 
 

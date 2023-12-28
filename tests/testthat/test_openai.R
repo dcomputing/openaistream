@@ -48,7 +48,9 @@ test_that("test set_proxy", {
 
 test_that("test_up_fileload",{
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
-  handle_openai$set_proxy("127.0.0.1",10890)
+  if(Sys.getenv("USE_PROXY")=="TRUE"){
+    handle_openai$set_proxy("127.0.0.1",10890)
+  }
   train_file_path<-system.file("exdata","train.jsonl", package = "openaistream")
   file_id <- handle_openai$files_upload(path = train_file_path,purpose = "fine-tune")
   expect_equal(file_id$filename,"train.jsonl")

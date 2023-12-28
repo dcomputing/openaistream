@@ -73,7 +73,7 @@ test_that("test_up_fileload",{
   expect_true(!res$success)
 
   #
-  Sys.time(3)
+  Sys.sleep(3)
   job<-handle_openai$fine_tuning_jobs_create(model = "gpt-3.5-turbo",training_file = file_id$id)
   expect_equal(job$training_file,file_id$id)
 

@@ -304,7 +304,7 @@ as data-only server-sent events as they become available.}
 
 \item{\code{n}}{integer. How many chat completion choices to generate for each input message. Note that you will be
 charged based on the number of generated tokens across all of the choices. Keep n as 1 to minimize costs.
-NOTE: The parameter sometimes fails to work when 'num' is not assigned a value, and the reason for this 
+NOTE: The parameter sometimes fails to work when 'num' is not assigned a value, and the reason for this
 is currently unclear. When failure occurs, try assigning any integer greater than 0 to the 'num' parameter.}
 
 \item{\code{num}}{The num parameter controls the number of text entries returned by a stream in one go.
@@ -351,7 +351,7 @@ as data-only server-sent events as they become available.}
 
 \item{\code{n}}{integer. How many chat completion choices to generate for each input message. Note that you will be
 charged based on the number of generated tokens across all of the choices. Keep n as 1 to minimize costs.
-NOTE: The parameter sometimes fails to work when 'num' is not assigned a value, and the reason for this 
+NOTE: The parameter sometimes fails to work when 'num' is not assigned a value, and the reason for this
 is currently unclear. When failure occurs, try assigning any integer greater than 0 to the 'num' parameter.}
 
 \item{\code{num}}{The num parameter controls the number of text entries returned by a stream in one go.

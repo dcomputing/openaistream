@@ -187,6 +187,6 @@ test_that("chat",{
     max_tokens = 10,
     n =3
   )
-  text<-streamlg$next_value
+  text<-streamlg$close()
   expect_equal(text$message,"error chatstream close")
 })

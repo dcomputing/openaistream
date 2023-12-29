@@ -1,6 +1,7 @@
 #' DataStream Class
 #'
 #' A R6 class to manage data streams.
+#'
 
 DataStream <- R6::R6Class(
   "DataStream",
@@ -10,15 +11,15 @@ DataStream <- R6::R6Class(
     iterator = NULL,
     num = 2,
     check = function() {
-      if (is.null(private$requery)) {
-        return("completed or requery is NULL_")
-      }
-      if (!inherits(private$requery, "curl")) {
+      if (!inherits(private$requery, "curl")||(Sys.getenv("TEST_EX_COND")=="error chatstream check is not curl")) {
         return("is not curl")
       }
       is_valid <- TRUE
       tryCatch({
         isOpen(private$requery)
+        if(Sys.getenv("TEST_EX_COND")=="error chatstream active isOpen"){
+          stop(Sys.getenv("TEST_EX_COND"))
+        }
         is_valid <- FALSE
       }, error = function(e) {
         is_valid <- TRUE
@@ -128,7 +129,11 @@ DataStream <- R6::R6Class(
         if(is.null(private$iterator)){
           return(private$status)
         }
+        if(Sys.getenv("TEST_EX_COND")=="error chatstream active next value"){
+            stop(Sys.getenv("TEST_EX_COND"))
+        }
         nextElem(private$iterator)
+
       }, error = function(e) {
         return(e)
       })

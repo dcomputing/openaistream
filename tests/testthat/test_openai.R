@@ -96,17 +96,17 @@ test_that("test_up_fileload",{
   expect_true(!res$success)
 
   job_list<-handle_openai$fine_tuning_jobs_list()
-  print(job_list)
-  expect_contains(names(job_list$data),"data")
+  expect_contains(names(job_list),"data")
 
   #error test
   res<-handle_openai$fine_tuning_jobs_list(verbosity = 4)
   expect_true(!res$success)
 
   job_status<-handle_openai$fine_tuning_jobs_cancel(job$id)
-  expect_true(job_status)
+  expect_equal(job_status$id,job$id)
 
-  res<-handle_openai$fine_tuning_jobs_cancel(job$id)
+  #error test
+  res<-handle_openai$fine_tuning_jobs_cancel("ftjob-VxJMKqY0gTmGPT")
   expect_true(!res$success)
 
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
@@ -116,8 +116,3 @@ test_that("test_up_fileload",{
   res<-handle_openai$files_delete(file_id$id, verbosity = 5)
   expect_true(!res$success)
 })
-
-
-
-
-

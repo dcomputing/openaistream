@@ -96,6 +96,7 @@ test_that("test_up_fileload",{
   expect_true(!res$success)
 
   job_list<-handle_openai$fine_tuning_jobs_list()
+  print(job_list)
   expect_contains(names(job_list$data),"data")
 
   #error test
@@ -103,8 +104,10 @@ test_that("test_up_fileload",{
   expect_true(!res$success)
 
   job_status<-handle_openai$fine_tuning_jobs_cancel(job$id)
-  #job_status
+  expect_true(job_status)
 
+  res<-handle_openai$fine_tuning_jobs_cancel(job$id)
+  expect_true(!res$success)
 
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
   expect_true(del_res$deleted)

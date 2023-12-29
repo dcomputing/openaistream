@@ -116,5 +116,5 @@ test_that("chat",{
     n =3
   )
   text<-streamlg$next_value
-  expect_equal(text$message,"error chatstream active isOpen")
+  expect_equal(text,"httr2_invalid")
 })

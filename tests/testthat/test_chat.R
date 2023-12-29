@@ -46,6 +46,54 @@ test_that("chat",{
   stat<-streamlg$get_state()
   expect_equal(stat,"close")
 
+  streamlg <- handle_openai$get_chat_completions_query(
+    messages = data.frame(role = c("system", "user"),
+                          content = c("You are a assistant.", "How's the weather today?")),
+    model = "gpt-3.5-turbo",
+    stream = TRUE,
+    max_tokens = 1,
+    n =3
+  )
+  for(i in 1:10){
+    text<-streamlg$next_value
+    if(length(text)==1){
+      break
+    }
+  }
+  expect_equal(text,"complete")
+
+  streamlg <- handle_openai$get_chat_completions_query(
+    messages = data.frame(role = c("system", "user"),
+                          content = c("You are a assistant.", "How's the weather today?")),
+    model = "gpt-3.5-turbo",
+    stream = TRUE,
+    max_tokens = 2,
+    n =3
+  )
+  for(i in 1:10){
+    text<-streamlg$next_value
+    if(length(text)==1){
+      break
+    }
+  }
+  expect_equal(text,"complete")
+  streamlg <- handle_openai$get_chat_completions_query(
+    messages = data.frame(role = c("system", "user"),
+                          content = c("You are a assistant.", "How's the weather today?")),
+    model = "gpt-3.5-turbo",
+    stream = TRUE,
+    max_tokens = 3,
+    n =3
+  )
+  for(i in 1:10){
+    text<-streamlg$next_value
+    if(length(text)==1){
+      break
+    }
+  }
+  expect_equal(text,"complete")
+
+
   #error test
   streamlg <- handle_openai$get_chat_completions_query(
     messages = data.frame(role = c("system", "user"),
@@ -117,4 +165,28 @@ test_that("chat",{
   )
   text<-streamlg$next_value
   expect_equal(text,"httr2_invalid")
+
+  Sys.setenv(TEST_EX_COND = "error chatstream data_source open is fail")
+  streamlg <- handle_openai$get_chat_completions_query(
+    messages = data.frame(role = c("system", "user"),
+                          content = c("You are a assistant.", "How's the weather today?")),
+    model = "gpt-3.5-turbo",
+    stream = TRUE,
+    max_tokens = 10,
+    n =3
+  )
+  text<-streamlg$next_value
+  expect_equal(text,"httr2_close open is fail")
+
+  Sys.setenv(TEST_EX_COND = "error chatstream close")
+  streamlg <- handle_openai$get_chat_completions_query(
+    messages = data.frame(role = c("system", "user"),
+                          content = c("You are a assistant.", "How's the weather today?")),
+    model = "gpt-3.5-turbo",
+    stream = TRUE,
+    max_tokens = 10,
+    n =3
+  )
+  text<-streamlg$next_value
+  expect_equal(text$message,"error chatstream close")
 })

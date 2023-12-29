@@ -50,6 +50,9 @@ DataStream <- R6::R6Class(
       if (private$status == "httr2_close") {
         tryCatch({
           open(private$requery, "rbf")
+          if(Sys.getenv("TEST_EX_COND")=="error chatstream data_source open is fail"){
+            stop(Sys.getenv("TEST_EX_COND"))
+          }
           private$status = "httr2_open"
         }, error = function(e) {
           private$status <- paste0(private$status, " open is fail")
@@ -85,7 +88,13 @@ DataStream <- R6::R6Class(
               return(choices$text)
             }
           }))
-          return(list(all_resp = lstr_cleaned, vres = vres))
+          #lstr_cleaned length is zero complete
+          if(length(lstr_cleaned)==0){
+            private$destroy("complete")
+            "complete"
+          }else{
+            list(all_resp = lstr_cleaned, vres = vres)
+          }
         }
       } else {
         return(private$status)
@@ -109,6 +118,9 @@ DataStream <- R6::R6Class(
     close = function(){
       tryCatch({
         private$destroy()
+        if(Sys.getenv("TEST_EX_COND")=="error chatstream close"){
+          stop(Sys.getenv("TEST_EX_COND"))
+        }
         return("close success")
       }, error = function(e) {
         return(e)

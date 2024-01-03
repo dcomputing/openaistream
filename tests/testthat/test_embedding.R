@@ -1,5 +1,5 @@
-#test_chat
-test_that("chat",{
+#test_embedding
+test_that("embedding",{
   Sys.setenv(TEST_EX_COND = "")
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   if(Sys.getenv("USE_PROXY")=="TRUE"){

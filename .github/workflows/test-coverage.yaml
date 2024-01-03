@@ -32,6 +32,8 @@ jobs:
       - name: Test coverage
         run: |
           covr::codecov(
+            line_exclusions=c("test_chat_stream.R","test_chat.R","test_embedding.R","test_file_fine.R",
+                             "test_init.R","test_long_time.R","test_proxy.R","test_speech.R"),
             quiet = FALSE,
             clean = FALSE,
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")

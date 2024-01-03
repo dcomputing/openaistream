@@ -37,6 +37,7 @@ test_that("stream",{
   stat<-streamlg$get_state()
   expect_equal(stat,"close")
 
+
   streamlg <- handle_openai$get_chat_completions_query(
     messages = data.frame(role = c("system", "user"),
                           content = c("You are a assistant.", "How's the weather today?")),

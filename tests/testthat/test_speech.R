@@ -31,4 +31,24 @@ test_that("speech",{
   expect_equal(text_E1$text,"Hi, this is a voice transmission test.")
   text_E2<-handle_openai$audio_translations(path = test_file1)
   expect_equal(text_E2$text,"Hi, this is a voice transmission test.")
+
+  #final test
+  streammp3<-handle_openai$audio_speech(input = "Hi, this is a voice transmission test",response_format="mp3",stream = T,num=1000)
+  for(i in 1:100){
+    text<-streammp3$next_value
+    expect_type(text,"raw")
+    stat<-streammp3$get_state()
+    if(stat=="complete"){
+      expect_equal(stat,"close")
+      break
+    }
+  }
+  # error test
+  sss<-handle_openai$audio_speech(input = "Hi, this is a voice transmission test.",response_format="mp3",verbosity = 4)
+  expect_true(!sss$success)
+  text_E1<-handle_openai$audio_transcriptions(path = test_file1,verbosity = 4)
+  expect_true(!text_E1$success)
+  text_E2<-handle_openai$audio_translations(path = test_file1,verbosity = 4)
+  expect_true(!text_E1$success)
+
 })

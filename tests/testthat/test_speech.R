@@ -39,7 +39,7 @@ test_that("speech",{
     expect_type(text,"raw")
     stat<-streammp3$get_state()
     if(stat=="complete"){
-      expect_equal(stat,"close")
+      expect_equal(stat,"complete")
       break
     }
   }

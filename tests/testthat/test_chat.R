@@ -5,8 +5,6 @@ test_that("chat",{
   if(Sys.getenv("USE_PROXY")=="TRUE"){
     handle_openai$set_proxy("127.0.0.1",10890)
   }
-  embed<-handle_openai$embeddings(model = "text-embedding-ada-002", input = "who are you?",verbosity = 3)
-  expect_type(embed$data$embedding[[1]],"double")
   # chat test not stream
   streamlg <- handle_openai$get_completions_query(
     prompt = "Please explain the World Wars?",

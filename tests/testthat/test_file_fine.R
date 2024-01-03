@@ -59,6 +59,9 @@ test_that("test fileload and fine train",{
   job_list<-handle_openai$fine_tuning_jobs_list()
   expect_contains(names(job_list),"data")
 
+  job_list<-handle_openai$fine_tuning_jobs_list(limit = 2, verbosity = 3)
+  expect_contains(names(job_list),"data")
+
   #error test
   res<-handle_openai$fine_tuning_jobs_list(verbosity = 4)
   expect_true(!res$success)

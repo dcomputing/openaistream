@@ -9,5 +9,5 @@ test_that("chat",{
   expect_type(embed$data$embedding[[1]],"double")
 
   embed<-handle_openai$embeddings(model = "text-embedding-ada-002", input = "who are you?",verbosity = 4)
-  expect_true(!streamlg$success)
+  expect_true(!embed$success)
 })

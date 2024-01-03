@@ -167,11 +167,7 @@ openai <- R6Class(
     #file call
     file_call=function(endpoint, path="", body=NULL, headers=list(), query=list(), verbosity=0){
       req<-private$base_call(endpoint, path=path, method="POST", headers=headers, query=query)
-      if (!is.null(body)) {
-        req<-req %>% req_body_multipart(!!!body)
-      }else{
-        return(list(success=FALSE, data="not find body"))
-      }
+      req<-req %>% req_body_multipart(!!!body)
       tryCatch({
         parsed <- req %>% req_perform(verbosity = verbosity)
         return(list(success=TRUE, data=fromJSON(rawToChar(parsed$body))))

@@ -379,7 +379,7 @@ Upload a file that can be used across various endpoints. The size of all the
              See the Assistants Tools guide to learn more about the types of files supported.
              The Fine-tuning API only supports .jsonl files.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{openai$files_upload(path, verbosity = 0, purpose)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{openai$files_upload(path = NULL, verbosity = 0, purpose = "fine-tune")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

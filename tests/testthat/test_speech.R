@@ -50,5 +50,8 @@ test_that("speech",{
   expect_true(!text_E1$success)
   text_E2<-handle_openai$audio_translations(path = test_file1,verbosity = 4)
   expect_true(!text_E1$success)
-
+  text_E1<-handle_openai$audio_transcriptions(path = NULL,verbosity = 3)
+  expect_true(!text_E1$success)
+  text_E2<-handle_openai$audio_translations(path = NULL,verbosity = 3)
+  expect_true(!text_E1$success)
 })

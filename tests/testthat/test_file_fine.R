@@ -80,6 +80,13 @@ test_that("test fileload and fine train",{
   #error test
   res<-handle_openai$files_delete(file_id$id, verbosity = 5)
   expect_true(!res$success)
+
+  #error test
+  res<-handle_openai$files_upload(path = NULL,purpose = "fine-tune",verbosity = 3)
+  expect_true(!res$success)
+  #error test
+  res<-handle_openai$files_upload(path = "/tmp/sadasdsdad",purpose = "fine-tune",verbosity = 3)
+  expect_true(!res$success)
 })
 
 

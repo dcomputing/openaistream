@@ -33,4 +33,12 @@ test_that("chat",{
     max_tokens = 10,n=3
   )
   expect_equal(nrow(streamlg$vres),3)
+  streamlg <- handle_openai$get_chat_completions_query(
+    messages = data.frame(role = c("system", "user"),
+                          content = c("You are a assistant.", "How's the weather today?")),
+    model = "gpt-3.5-turbo",
+    stream = F,
+    max_tokens = 10,n=3,verbosity = 4
+  )
+  expect_true(!streamlg$success)
 })

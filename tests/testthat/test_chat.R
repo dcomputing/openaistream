@@ -1,3 +1,4 @@
+#test_chat
 test_that("chat",{
   Sys.setenv(TEST_EX_COND = "")
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))

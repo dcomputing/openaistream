@@ -82,11 +82,11 @@ DataStream <- R6::R6Class(
           lstr_cleaned <- lstr[nchar(unlist(lstr)) > 1]
           vres <- unlist(lapply(lstr_cleaned, function(v) {
             choices <- fromJSON(v)$choices
+            res<-choices$text
             if (is.null(choices$text)) {
-              return(choices)
-            } else {
-              return(choices$text)
+              res<-choices
             }
+            res
           }))
           #lstr_cleaned length is zero complete
           if(length(lstr_cleaned)==0){

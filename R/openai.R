@@ -161,11 +161,7 @@ openai <- R6Class(
     #stream call
     handle_call=function(endpoint, path="", body=NULL, headers=list(), query=list()){
       req<-private$base_call(endpoint, path=path, method="POST", headers=headers, query=query)
-      if (!is.null(body)) {
-        req <- req %>%req_body_json(body)
-      }else{
-        return(list(success=FALSE, data="not find body"))
-      }
+      req <- req %>% req_body_json(body)
       return(curl::curl(req$url, handle = httr2:::req_handle(req)))
     },
     #file call
@@ -182,6 +178,15 @@ openai <- R6Class(
       }, error=function(e) {
         return(openai_error$new(as.character(e)))
       })
+    },
+    check_path=function(path){
+      if(is.null(path)){
+        return(list(success=FALSE, data="path is NULL"))
+      }else if(!file.exists(path)){
+        return(list(success=FALSE, data=paste0("path (",path,") is not exists")))
+      }else{
+        return(list(success=T))
+      }
     }
   ),
   public = list(
@@ -331,7 +336,9 @@ openai <- R6Class(
     #' @param verbosity numeric. Verbosity level for the API call(0:no output;1:show headers;
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @return The uploaded File object.
-    files_upload=function(path,verbosity=0,purpose){
+    files_upload=function(path=NULL,verbosity=0,purpose = "fine-tune"){
+      ff<-private$check_path(path)
+      if(!ff$success){return(ff)}
       result<-private$file_call(endpoint = "files",body = list(file = curl::form_file(path),purpose=purpose),verbosity=verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
@@ -519,6 +526,8 @@ openai <- R6Class(
     #' @param ... Additional parameters as required by the OpenAI API.For example:language;prompt;response_format;temperature....
     #' @return The transcribed text.
     audio_transcriptions=function(path,model="whisper-1",...,verbosity=0){
+      ff<-private$check_path(path)
+      if(!ff$success){return(ff)}
       option <- list(...)
       option$model <- model
       option$file <- curl::form_file(path)
@@ -538,6 +547,8 @@ openai <- R6Class(
     #' @param ... Additional parameters as required by the OpenAI API.For example:prompt;response_format;temperature....
     #' @return The transcribed text.
     audio_translations=function(path,model="whisper-1",...,verbosity=0){
+      ff<-private$check_path(path)
+      if(!ff$success){return(ff)}
       option <- list(...)
       option$model <- model
       option$file <- curl::form_file(path)
@@ -574,10 +585,14 @@ openai <- R6Class(
     #' @param ...  Additional parameters as required by the OpenAI API.For example:mask;model;n...
     #' @return Returns a list of image objects.
     images_edits=function(image,prompt,...,verbosity=0){
+      ff<-private$check_path(image)
+      if(!ff$success){return(ff)}
       option <- list(...)
       option$prompt <- prompt
       option$image<-curl::form_file(image)
       if(!is.null(option$mask)){
+        ff<-private$check_path(option$mask)
+        if(!ff$success){return(ff)}
         option$mask<-curl::form_file(option$mask)
       }
       result<-private$file_call(endpoint = "images",path = "/edits",body = option,verbosity=verbosity)
@@ -594,6 +609,8 @@ openai <- R6Class(
     #' @param ...  Additional parameters as required by the OpenAI API.For example:model;n;response_format
     #' @return Returns a list of image objects.
     images_variations=function(image,...,verbosity=0){
+      ff<-private$check_path(image)
+      if(!ff$success){return(ff)}
       option <- list(...)
       option$image<-curl::form_file(image)
       result<-private$file_call(endpoint = "images",path = "/variations",body = option,verbosity=verbosity)

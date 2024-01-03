@@ -46,4 +46,25 @@ test_that("images",{
   request(pic4$data$url[2]) %>%req_perform(path = pic_file4_2)
   expect_true(file.exists(pic_file4_1))
   expect_true(file.exists(pic_file4_2))
+
+  ##error test
+  pic1<-handle_openai$images_generations(prompt = "A small bird flies over the ocean, heading towards the storm.",verbosity = 4)
+  expect_true(!pic1$success)
+  pic3<-handle_openai$images_edits(image = NULL,prompt = "Please modify the bird in the picture to a flock of birds."
+                                   ,verbosity = 3,n="2",size="256x256")
+  expect_true(!pic3$success)
+  pic3<-handle_openai$images_edits(image = pic_file2,mask="/tmp/sadasdasd",prompt = "Please modify the bird in the picture to a flock of birds."
+                                   ,verbosity = 3,n="2",size="256x256")
+  expect_true(!pic3$success)
+  pic3<-handle_openai$images_edits(image = pic_file2,mask=pic_file2,prompt = "Please modify the bird in the picture to a flock of birds."
+                                   ,verbosity = 3,n="2",size="256x256")
+  expect_contains(object = names(pic3),expected = "data")
+  expect_equal(length(pic3$data$url),2)
+  pic3<-handle_openai$images_edits(image = pic_file2,mask=pic_file1,prompt = "Please modify the bird in the picture to a flock of birds."
+                                   ,verbosity = 3,n="2",size="256x256")
+  expect_true(!pic3$success)
+  pic4<-handle_openai$images_variations(image = NULL,n="2",size="256x256")
+  expect_true(!pic4$success)
+  pic4<-handle_openai$images_variations(image = pic_file1,n="2",size="256x256",verbosity = 4)
+  expect_true(!pic4$success)
 })

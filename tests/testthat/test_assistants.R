@@ -40,4 +40,23 @@ test_that("stream",{
   expect_true(del_res$deleted)
   assd<-handle_openai$assistants_delete(ass$id)
   expect_true(assd$deleted)
+
+  #error test
+  ass<-handle_openai$assistants_create(name="cor_flag",
+                                       model="gpt-4",
+                                       instructions="I am HealthNutritionAssistant",verbosity = 4
+  )
+  expect_true(!ass$success)
+  #error test
+  assr<-handle_openai$assistants_retrieve(NULL,verbosity = 4)
+  expect_true(!assr$success)
+  assm<-handle_openai$assistants_modify(assr$id,model="gpt-4-1106-preview",tools=list(list(type="retrieval"),list(type="code_interpreter")),verbosity = 4)
+  expect_true(!assm$success)
+  assd<-handle_openai$assistants_delete(ass$id,verbosity = 4)
+  expect_true(!assd$success)
+  assl<-handle_openai$assistants_list(verbosity = 4)
+  expect_true(!assl$success)
+  assfc<-handle_openai$assistants_file_create(assm$id,file_id$id,verbosity = 4)
+  expect_true(!assfc$success)
+
 })

@@ -19,17 +19,21 @@ test_that("stream",{
   expect_equal(ass$name,"cor_flag")
   assr<-handle_openai$assistants_retrieve(ass$id)
   expect_equal(assr$name,"cor_flag")
-  assm<-handle_openai$assistants_modify(assr$id,model="gpt-4-1106-preview",tools=list(list(type="retrieval")),verbosity = 3)
+  assm<-handle_openai$assistants_modify(assr$id,model="gpt-4-1106-preview",tools=list(list(type="retrieval"),list(type="code_interpreter")))
   expect_equal(assm$model,"gpt-4-1106-preview")
   assl<-handle_openai$assistants_list()
   expect_contains(assl$data$name,"cor_flag")
   #ass file
   train_file_path<-system.file("exdata","assfile.csv", package = "openaistream")
   file_id <- handle_openai$files_upload(path = train_file_path,purpose = "assistants")
-  assfc<-handle_openai$assistants_file_create(assm$id,file_id$id,verbosity = 3)
-
-
-
+  assfc<-handle_openai$assistants_file_create(assm$id,file_id$id)
+  expect_equal(assfc$object,"assistant.file")
+  assfr<-handle_openai$assistants_file_retrieve(assm$id,file_id$id)
+  expect_equal(assfr$object,"assistant.file")
+  assfl<-handle_openai$assistants_file_list(assm$id)
+  expect_contains(assfl$data$id,file_id$id)
+  assfd<-handle_openai$assistants_file_delete(assm$id,file_id$id)
+  expect_true(assfd$deleted)
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
   expect_true(del_res$deleted)
   assd<-handle_openai$assistants_delete(ass$id)

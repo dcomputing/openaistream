@@ -11,7 +11,7 @@ test_that("thread",{
   thm<-handle_openai$threads_modify(thr$id,metadata=list(test="test"))
   expect_equal(thm$metadata$test,"test")
   thd<-handle_openai$threads_delete(thr$id)
-  expect_true(thd)
+  expect_true(thd$deleted)
   #error test
   thc<-handle_openai$threads_create(verbosity = 4)
   expect_true(!thc$success)

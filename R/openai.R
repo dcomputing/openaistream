@@ -639,7 +639,7 @@ openai <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.).
     #' @return The assistant object matching the specified ID.
     assistants_retrieve=function(assistant_id,verbosity=0){
-      result <- private$api_call("assistants",path=paste0("/",assistant_id), body = option,method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("assistants",path=paste0("/",assistant_id),method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{

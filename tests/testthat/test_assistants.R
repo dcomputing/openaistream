@@ -58,5 +58,10 @@ test_that("stream",{
   expect_true(!assl$success)
   assfc<-handle_openai$assistants_file_create(assm$id,file_id$id,verbosity = 4)
   expect_true(!assfc$success)
-
+  assfr<-handle_openai$assistants_file_retrieve(assm$id,file_id$id,verbosity = 4)
+  expect_true(!assfr$success)
+  assfl<-handle_openai$assistants_file_list(assm$id,verbosity = 4)
+  expect_true(!assfl$success)
+  assfd<-handle_openai$assistants_file_delete(assm$id,file_id$id,verbosity = 4)
+  expect_true(!assfd$success)
 })

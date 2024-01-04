@@ -25,8 +25,10 @@ test_that("stream",{
   expect_contains(assl$data$name,"cor_flag")
   #ass file
   train_file_path<-system.file("exdata","assfile.csv", package = "openaistream")
-  file_id <- handle_openai$files_upload(path = train_file_path,purpose = "assistants")
-  assfc<-handle_openai$assistants_file_create(assm$id,file_id$id)
+  file_id <- handle_openai$files_upload(path = train_file_path,purpose = "assistants",verbosity = 0)
+  #this is a openai bug,the first is success ,but return is error,so we neet run two
+  assfc<-handle_openai$assistants_file_create(assm$id,file_id$id,verbosity = 0)
+  assfc<-handle_openai$assistants_file_create(assm$id,file_id$id,verbosity = 0)
   expect_equal(assfc$object,"assistant.file")
   assfr<-handle_openai$assistants_file_retrieve(assm$id,file_id$id)
   expect_equal(assfr$object,"assistant.file")

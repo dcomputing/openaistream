@@ -18,8 +18,9 @@ test_that("messages",{
   mesr<-handle_openai$messages_retrieve(thc$id,mesc$id)
   expect_equal(mesr$object,"thread.message")
   mesrf<-handle_openai$messages_file_retrieve(thc$id,mesc$id,file_id$id)
-  expect_equal(mesr$object,"thread.message.file")
-
+  expect_equal(mesrf$object,"thread.message.file")
+  mesm<-handle_openai$messages_modify(thc$id,mesc$id,metadata=list(test="test"))
+  expect_equal(mesm$metadata$test,"test")
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
   expect_true(del_res$deleted)
   thd<-handle_openai$threads_delete(thc$id)

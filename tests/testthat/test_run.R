@@ -89,12 +89,6 @@ test_that("run",{
   expect_equal(runto$object,"thread.run")
   runmls<-handle_openai$messages_list(runct$thread_id)
 
-
-
-
-
-
-
   del_res<-handle_openai$files_delete(file_id$id, verbosity = 0)
   expect_true(del_res$deleted)
   thd<-handle_openai$threads_delete(thc$id)

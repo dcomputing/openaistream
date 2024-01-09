@@ -2,7 +2,6 @@
 #'
 #' A R6 class to manage data streams.
 #'
-
 DataStream <- R6::R6Class(
   "DataStream",
   private = list(

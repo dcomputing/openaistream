@@ -22,6 +22,8 @@ Provides methods to interact with OpenAI API including
 \item{\code{audio}}{class}
 
 \item{\code{embeddings}}{class}
+
+\item{\code{images}}{class}
 }
 \if{html}{\out{</div>}}
 }

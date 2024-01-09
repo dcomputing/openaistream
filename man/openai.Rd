@@ -18,6 +18,10 @@ Provides methods to interact with OpenAI API including
 \item{\code{fine_tuning}}{class}
 
 \item{\code{chat}}{class}
+
+\item{\code{audio}}{class}
+
+\item{\code{embeddings}}{class}
 }
 \if{html}{\out{</div>}}
 }

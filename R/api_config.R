@@ -33,16 +33,6 @@ api_config <- R6Class(
     #' @param proxy_ip character Required. The IP address of the proxy.
     #' @param proxy_port character Required. The port number of the proxy.
     set_proxy = function(proxy_ip,proxy_port){
-      if(!grepl("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", proxy_ip)) {
-        stop("Invalid proxy IP address.")
-      }
-      ip_components <- unlist(strsplit(proxy_ip, split = "\\."))
-      if(any(as.numeric(ip_components) > 255) || any(as.numeric(ip_components) < 0)) {
-        stop("Invalid proxy IP address.")
-      }
-      if(!is.numeric(proxy_port) || proxy_port < 1 || proxy_port > 65535) {
-        stop("Invalid proxy port number.")
-      }
       private$proxy$ip = proxy_ip
       private$proxy$port = proxy_port
     },

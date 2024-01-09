@@ -4,6 +4,7 @@ test_that("long time test",{
     handle_openai$set_proxy("127.0.0.1",10890)
   }
   train_file_path<-system.file("exdata","train.jsonl", package = "openaistream")
+  expect_error({handle_openai$files<-""})
   file_id <- handle_openai$files$upload(path = train_file_path,purpose = "fine-tune")
   # the pretest
   #job create for delete job

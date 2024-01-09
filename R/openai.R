@@ -10,6 +10,7 @@ openai <- R6Class(
     etc = NULL,
     models_n=NULL,
     files_n=NULL,
+    chat_n=NULL,
     fine_tuning_n=NULL,
     act_fun=function(v,nm=NULL){
       if (missing(v)) {
@@ -28,6 +29,7 @@ openai <- R6Class(
       private$models_n<-models$new(private$etc)
       private$files_n<-files$new(private$etc)
       private$fine_tuning_n<-fine_tuning$new(private$etc)
+      private$chat_n<-chat$new(private$etc)
     },
     #' @description Configure the proxy settings.
     #' @param proxy_ip character Required. The IP address of the proxy.
@@ -58,6 +60,10 @@ openai <- R6Class(
     #' @field fine_tuning class
     fine_tuning=function(value){
       private$act_fun(value,nm="fine_tuning_n")
+    },
+    #' @field chat class
+    chat=function(value){
+      private$act_fun(value,nm="chat_n")
     }
   )
 )

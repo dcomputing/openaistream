@@ -22,7 +22,7 @@ test_that("long time test",{
     }
   }
   #error test
-  res<-handle_openai$fine_tuning$delete("gpt-3.5-turbo-sadsada")
+  res<-handle_openai$models$delete("gpt-3.5-turbo-sadsada")
   expect_true(!res$success)
   del_res<-handle_openai$files$delete(file_id$id, verbosity = 0)
   res<-handle_openai$models$retrieve(model = "gpt-3.5-turbo",verbosity = 0)

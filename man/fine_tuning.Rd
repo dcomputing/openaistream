@@ -19,7 +19,6 @@ DataStream Class
 \item \href{#method-fine_tuning-retrieve}{\code{fine_tuning$retrieve()}}
 \item \href{#method-fine_tuning-cancel}{\code{fine_tuning$cancel()}}
 \item \href{#method-fine_tuning-events}{\code{fine_tuning$events()}}
-\item \href{#method-fine_tuning-delete}{\code{fine_tuning$delete()}}
 \item \href{#method-fine_tuning-clone}{\code{fine_tuning$clone()}}
 }
 }
@@ -159,30 +158,6 @@ Get status updates for a fine-tuning job.
 }
 \subsection{Returns}{
 A list of fine-tuning event objects.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-fine_tuning-delete"></a>}}
-\if{latex}{\out{\hypertarget{method-fine_tuning-delete}{}}}
-\subsection{Method \code{delete()}}{
-Delete a fine-tuned model. You must have the Owner role in
-             your organization to delete a model.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{fine_tuning$delete(model, verbosity = 0)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{model}}{character Required. The model to delete}
-
-\item{\code{verbosity}}{numeric. Verbosity level for the API call(0:no output;1:show headers;
-2:show headers and bodies;3: show headers, bodies, and curl status messages.).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Deletion status.
 }
 }
 \if{html}{\out{<hr>}}

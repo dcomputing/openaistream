@@ -12,7 +12,7 @@ test_that("long time test",{
   #test jobs_delete
   Sys.sleep(200)
   #error test
-  for(i in 1:20){
+  for(i in 1:100){
     Sys.sleep(20)
     job_retrieve<-handle_openai$fine_tuning$retrieve(job2$id, verbosity = 0)
     print(paste0("\n",i," retry ",job_retrieve$status))

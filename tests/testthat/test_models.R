@@ -16,7 +16,7 @@ test_that("long time test",{
     job_retrieve<-handle_openai$fine_tuning$retrieve(job2$id, verbosity = 0)
     print(paste0("\n",i," retry ",job_retrieve$status))
     if(job_retrieve$status=="succeeded"){
-      res<-handle_openai$fine_tuning$delete(job_retrieve$fine_tuned_model)
+      res<-handle_openai$models$delete(job_retrieve$fine_tuned_model)
       expect_true(res$deleted)
       break
     }

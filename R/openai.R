@@ -16,6 +16,10 @@ openai <- R6Class(
     embeddings_n=NULL,
     images_n=NULL,
     moderations_n=NULL,
+    assistants_n=NULL,
+    threads_n=NULL,
+    messages_n=NULL,
+    runs_n=NULL,
     act_fun=function(v,nm=NULL){
       if (missing(v)) {
         return(private[[nm]])
@@ -38,6 +42,10 @@ openai <- R6Class(
       private$embeddings_n<-embeddings$new(private$etc)
       private$images_n<-images$new(private$etc)
       private$moderations_n<-moderations$new(private$etc)
+      private$assistants_n<-assistants$new(private$etc)
+      private$threads_n<-threads$new(private$etc)
+      private$messages_n<-messages$new(private$etc)
+      private$runs_n<-runs$new(private$etc)
     },
     #' @description Configure the proxy settings.
     #' @param proxy_ip character Required. The IP address of the proxy.
@@ -88,6 +96,22 @@ openai <- R6Class(
     #' @field moderations class
     moderations=function(value){
       private$act_fun(value,nm="moderations_n")
+    },
+    #' @field assistants class
+    assistants=function(value){
+      private$act_fun(value,nm="assistants_n")
+    },
+    #' @field threads class
+    threads=function(value){
+      private$act_fun(value,nm="threads_n")
+    },
+    #' @field messages class
+    messages=function(value){
+      private$act_fun(value,nm="messages_n")
+    },
+    #' @field runs class
+    runs=function(value){
+      private$act_fun(value,nm="runs_n")
     }
   )
 )

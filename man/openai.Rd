@@ -26,6 +26,14 @@ Provides methods to interact with OpenAI API including
 \item{\code{images}}{class}
 
 \item{\code{moderations}}{class}
+
+\item{\code{assistants}}{class}
+
+\item{\code{threads}}{class}
+
+\item{\code{messages}}{class}
+
+\item{\code{runs}}{class}
 }
 \if{html}{\out{</div>}}
 }

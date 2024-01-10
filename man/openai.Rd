@@ -24,6 +24,8 @@ Provides methods to interact with OpenAI API including
 \item{\code{embeddings}}{class}
 
 \item{\code{images}}{class}
+
+\item{\code{moderations}}{class}
 }
 \if{html}{\out{</div>}}
 }

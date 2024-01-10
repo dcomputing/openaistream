@@ -15,6 +15,7 @@ openai <- R6Class(
     audio_n=NULL,
     embeddings_n=NULL,
     images_n=NULL,
+    moderations_n=NULL,
     act_fun=function(v,nm=NULL){
       if (missing(v)) {
         return(private[[nm]])
@@ -36,6 +37,7 @@ openai <- R6Class(
       private$audio_n<-audio$new(private$etc)
       private$embeddings_n<-embeddings$new(private$etc)
       private$images_n<-images$new(private$etc)
+      private$moderations_n<-moderations$new(private$etc)
     },
     #' @description Configure the proxy settings.
     #' @param proxy_ip character Required. The IP address of the proxy.
@@ -82,6 +84,10 @@ openai <- R6Class(
     #' @field images class
     images=function(value){
       private$act_fun(value,nm="images_n")
+    },
+    #' @field moderations class
+    moderations=function(value){
+      private$act_fun(value,nm="moderations_n")
     }
   )
 )

@@ -17,7 +17,8 @@ api_config <- R6Class(
       audio = "https://api.openai.com/v1/audio",
       images = "https://api.openai.com/v1/images",
       assistants = "https://api.openai.com/v1/assistants",
-      threads = "https://api.openai.com/v1/threads"
+      threads = "https://api.openai.com/v1/threads",
+      moderations = "https://api.openai.com/v1/moderations"
     )
   ),
   public = list(

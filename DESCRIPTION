@@ -1,7 +1,7 @@
 Package: openaistream
 Type: Package
 Title: Streaming Capabilities for 'OpenAI API' Interactions
-Version: 0.1.10
+Version: 0.2.0
 Maintainer: Li Gen <libingfei@sina.com>
 Description: Based on the 'httr2' framework, the 'OpenAI' interface supports streaming calls and model training. 
              For more details on the API methods implemented, see the 'OpenAI' platform documentation at <https://platform.openai.com/docs/api-reference>.

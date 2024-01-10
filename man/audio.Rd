@@ -4,9 +4,7 @@
 \alias{audio}
 \title{audio Class}
 \description{
-audio Class
-
-audio Class
+To turn audio into text or text into audio
 }
 \section{Super class}{
 \code{\link[openaistream:openai]{openaistream::openai}} -> \code{audio}

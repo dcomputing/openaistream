@@ -1,4 +1,9 @@
 #' audio Class
+#'
+#'
+#' @description To turn audio into text or text into audio
+#'
+#'
 audio <- R6Class(
   "audio",
   inherit = base_api,

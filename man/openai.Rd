@@ -8,6 +8,16 @@ Provides methods to interact with OpenAI API including
   fetching model details, generating completions, managing files, and more.
   Always ensure that the API key is kept private.
 }
+\examples{
+\donttest{
+Sys.setenv(OPENAI_KEY="you openai key")
+aaa <- openai$new(Sys.getenv("OPENAI_KEY"))
+#if need proxy
+#aaa$set_proxy("127.0.0.1", 10890)
+# List model
+aaa$models$list()
+}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{

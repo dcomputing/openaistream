@@ -84,10 +84,32 @@ test_that("run",{
       break
     }
   }
-
   runto<-handle_openai$runs$submit_tool_outputs(runct$thread_id,runct$id,tool_outputs = list(list(tool_call_id=runrs$required_action$submit_tool_outputs$tool_calls$id,output="BJ")),verbosity = 3)
   expect_equal(runto$object,"thread.run")
-  runmls<-handle_openai$messages$list(runct$thread_id)
+  # runmls<-handle_openai$messages$list(runct$thread_id)
+  # runsls<-handle_openai$runs$list(runct$thread_id)
+  # runct<-handle_openai$runs$create(runct$thread_id,ass$id,verbosity = 3)
+  aaa<-handle_openai$runs$cancel(runct$thread_id,runto$id,verbosity = 3)
+  expect_equal(aaa$status,"cancelling")
+  #error test
+  aaa<-handle_openai$runs$cancel(runct$thread_id,runct$id,verbosity = 4)
+  expect_true(!aaa$success)
+  runct<-handle_openai$runs$create(runct$thread_id,ass$id,verbosity = 4)
+  expect_true(!runct$success)
+  runrs<-handle_openai$runs$retrieve(runct$thread_id,runct$id,verbosity = 4)
+  expect_true(!runrs$success)
+  runm<-handle_openai$runs$modify(runct$thread_id,runct$id,metadata=list(test="test"),verbosity = 4)
+  expect_true(!runm$success)
+  runl<-handle_openai$runs$list(runct$thread_id,verbosity = 4)
+  expect_true(!runl$success)
+  runto<-handle_openai$runs$submit_tool_outputs(runct$thread_id,runct$id,tool_outputs = list(list(tool_call_id=runrs$required_action$submit_tool_outputs$tool_calls$id,output="BJ")),verbosity = 4)
+  expect_true(!runto$success)
+  runct<-handle_openai$runs$create_tread(ass$id,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),verbosity = 4)
+  expect_true(!runct$success)
+  runrs<-handle_openai$runs$steps_retrieve(runct$thread_id,runct$id,runls$data$id[1],verbosity = 4)
+  expect_true(!runrs$success)
+  runls<-handle_openai$runs$steps_list(runct$thread_id,runct$id,limit=1,verbosity = 4)
+  expect_true(!runls$success)
 
   del_res<-handle_openai$files$delete(file_id$id, verbosity = 0)
   expect_true(del_res$deleted)

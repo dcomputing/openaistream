@@ -18,6 +18,10 @@ implement all related features as comprehensively as possible. It is
 updated every two months based on the actual changes in OpenAI’s
 interfaces.
 
-\##Installation
+## Installation
 
-The method to install openai is: install.packages(“openai”)
+The method to install openai is:
+
+``` r
+  install.packages("openai")
+```

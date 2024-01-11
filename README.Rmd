@@ -23,7 +23,10 @@ knitr::opts_chunk$set(
 
 `{openaistream}` is an unofficial SDK for OpenAI, which aims to implement all related features as comprehensively as possible. It is updated every two months based on the actual changes in OpenAI's interfaces.
 
-## Installation
+## Installation 
 
 The method to install openai is: 
-install.packages("openai")
+
+```{r, eval = FALSE}
+  install.packages("openai")
+```

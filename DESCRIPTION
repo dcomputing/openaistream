@@ -21,4 +21,6 @@ Suggests:
     testthat (>= 3.0.0),
     covr
 RoxygenNote: 7.2.3
+URL: https://github.com/libingfei/openaistream
+BugReports: https://github.com/libingfei/openaistream/issues
 Config/testthat/edition: 3

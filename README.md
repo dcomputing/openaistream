@@ -23,5 +23,5 @@ interfaces.
 The method to install openai is:
 
 ``` r
-  install.packages("openai")
+  install.packages("openaistream")
 ```

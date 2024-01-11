@@ -28,5 +28,5 @@ knitr::opts_chunk$set(
 The method to install openai is: 
 
 ```{r, eval = FALSE}
-  install.packages("openai")
+  install.packages("openaistream")
 ```

@@ -12,3 +12,18 @@ knitr::opts_chunk$set(
 ```
 # openaistream <img src="man/figures/logo.png" align="right" width="120"/>
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/libingfei/openaistream/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/libingfei/openaistream/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/libingfei/openaistream/graph/badge.svg?token=G8AXF6F4BC)](https://codecov.io/gh/libingfei/openaistream)
+[![CRAN status](https://www.r-pkg.org/badges/version/openaistream)](https://CRAN.R-project.org/package=openaistream)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/openaistream?color=brightgreen)](https://cranlogs.r-pkg.org/badges/grand-total/openaistream?color=brightgreen)
+<!-- badges: end -->
+
+## Overview 
+
+`{openaistream}` is an unofficial SDK for OpenAI, which aims to implement all related features as comprehensively as possible. It is updated every two months based on the actual changes in OpenAI's interfaces.
+
+## Installation
+
+The method to install openai is: 
+install.packages("openai")

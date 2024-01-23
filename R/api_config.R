@@ -1,7 +1,7 @@
 #' api_config Class
 #'
 #' A R6 class to manage config.
-#'
+#'re
 api_config <- R6Class(
   "api_config",
   private = list(

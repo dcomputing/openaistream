@@ -1,4 +1,5 @@
 test_that("long time test",{
+  skip_on_cran()
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   if(Sys.getenv("USE_PROXY")=="TRUE"){
     handle_openai$set_proxy("127.0.0.1",10890)

@@ -1,4 +1,5 @@
 test_that("images",{
+  skip_on_cran()
   library(png)
   Sys.setenv(TEST_EX_COND = "")
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))

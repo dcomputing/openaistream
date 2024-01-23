@@ -1,4 +1,5 @@
 test_that("test set_proxy", {
+  skip_on_cran()
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   expect_silent(handle_openai$set_proxy("127.0.0.1", 10890))
   expect_error(handle_openai$set_proxy("127.0sdha", 10890))

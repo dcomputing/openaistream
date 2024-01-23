@@ -1,5 +1,6 @@
 #test_chat
 test_that("chat",{
+  skip_on_cran()
   Sys.setenv(TEST_EX_COND = "")
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   if(Sys.getenv("USE_PROXY")=="TRUE"){

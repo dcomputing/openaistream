@@ -3,7 +3,7 @@ test_that("assistants",{
   Sys.setenv(TEST_EX_COND = "")
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   if(Sys.getenv("USE_PROXY")=="TRUE"){
-    handle_openai$set_proxy("127.0.0.1",10890)
+    handle_openai$set_proxy("10.0.108.36",7890)
   }
   ass<-handle_openai$assistants$create(name="cor_flag",
                                    model="gpt-4",

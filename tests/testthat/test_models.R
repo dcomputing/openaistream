@@ -2,7 +2,7 @@ test_that("long time test",{
   skip_on_cran()
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   if(Sys.getenv("USE_PROXY")=="TRUE"){
-    handle_openai$set_proxy("127.0.0.1",10890)
+    handle_openai$set_proxy("10.0.108.36",7890)
   }
   train_file_path<-system.file("exdata","train.jsonl", package = "openaistream")
   expect_error({handle_openai$files<-""})

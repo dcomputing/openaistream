@@ -4,7 +4,7 @@ test_that("images",{
   Sys.setenv(TEST_EX_COND = "")
   handle_openai<-openai$new(Sys.getenv("OPENAI_KEY"))
   if(Sys.getenv("USE_PROXY")=="TRUE"){
-    handle_openai$set_proxy("127.0.0.1",10890)
+    handle_openai$set_proxy("10.0.108.36",7890)
   }
   pic1<-handle_openai$images$create(prompt = "A small bird flies over the ocean, heading towards the storm.")
   test_dir = tempdir()

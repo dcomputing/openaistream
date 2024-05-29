@@ -1,4 +1,4 @@
-#' assistants Class
+#' assistants Class test
 assistants <- R6Class(
   "assistants",
   inherit = base_api,

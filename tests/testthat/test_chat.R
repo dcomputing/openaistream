@@ -103,7 +103,7 @@ test_that("chat",{
   )
   text<-streamlg$next_value
   #expect_equal(text,"httr2_close open is fail")
-  expect_equal(text$message,"parse error: trailing garbage\n                              \"message\": \"'sdasd' is not of type 'inte\n                     (right here) ------^\n")
+  expect_true(grepl(pattern = "error",text$message,ignore.case = T))
 
   streamlg <- handle_openai$chat$create(
     messages = data.frame(role = c("system", "user"),

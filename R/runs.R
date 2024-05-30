@@ -13,7 +13,7 @@ runs <- R6Class(
     create=function(thread_id,assistant_id,...,verbosity=0){
       option <- list(...)
       option$assistant_id <- assistant_id
-      result<-private$api_call("threads", paste0("/", thread_id,"/runs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result<-private$api_call("threads", paste0("/", thread_id,"/runs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -27,7 +27,7 @@ runs <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The run object matching the specified ID.
     retrieve=function(thread_id,run_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -43,7 +43,7 @@ runs <- R6Class(
     #' @return The modified run object matching the specified ID.
     modify=function(thread_id,run_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -58,7 +58,7 @@ runs <- R6Class(
     #' @return A list of run objects.
     list=function(thread_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -76,7 +76,7 @@ runs <- R6Class(
     #' @return The modified run object matching the specified ID.
     submit_tool_outputs=function(thread_id,run_id,tool_outputs,verbosity=0){
       option <- list(tool_outputs=tool_outputs)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/submit_tool_outputs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/submit_tool_outputs"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -90,7 +90,7 @@ runs <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The modified run object matching the specified ID.
     cancel=function(thread_id,run_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/cancel"), method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/cancel"), method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -106,7 +106,7 @@ runs <- R6Class(
     create_tread=function(assistant_id,...,verbosity=0){
       option <- list(...)
       option$assistant_id <- assistant_id
-      result<-private$api_call("threads",path="/runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result<-private$api_call("threads",path="/runs",body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -121,7 +121,7 @@ runs <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The run step object matching the specified ID.
     steps_retrieve=function(thread_id,run_id,step_id,verbosity=0){
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps/",step_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps/",step_id), method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{
@@ -137,7 +137,7 @@ runs <- R6Class(
     #' @return A list of run step objects.
     steps_list=function(thread_id,run_id,...,verbosity=0){
       option <- list(...)
-      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v1"), verbosity = verbosity)
+      result <- private$api_call("threads", paste0("/", thread_id,"/runs/",run_id,"/steps"),query = option, method = "GET",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {
         return(list(success=FALSE, message=result$get_message(), type=result$get_type()))
       }else{

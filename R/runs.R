@@ -85,9 +85,9 @@ runs <- R6Class(
     #'                  2:show headers and bodies;3: show headers, bodies, and curl status messages.)
     #' @return The modified run object matching the specified ID.
     submit_tool_outputs=function(thread_id,run_id,tool_outputs,stream=F,num=2,verbosity=0){
+      option<-list()
       option$tool_outputs=tool_outputs
-      option$stream=sream
-      option <- list(tool_outputs=tool_outputs)
+      option$stream=stream
       if (option$stream) {
         handle <- private$handle_call("threads", paste0("/", thread_id,"/runs/",run_id,"/submit_tool_outputs"), body=option, headers=list(Accept="text/event-stream", `Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"))
         return(DataStream$new(requery = handle , num = num))

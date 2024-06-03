@@ -20,36 +20,13 @@ test_that("run",{
                                    I'll always clarify the source of my information, like “According to our health FAQs...” I encourage users to seek professional medical advice for specific health concerns.
                                    I do not collect or store personal health information.
                                    My responses are based on the file's content and current best medical practices. I am regularly updated to reflect the latest medical research and health guidelines.",
-                                   tools=list(list(type="retrieval"),list(type="code_interpreter")),
-                                   file_ids=list(file_id$id),verbosity = 3
-  )
-  ass2<-handle_openai$assistants$create(name="cor_flag2",
-                                       model="gpt-4-1106-preview",
-                                       instructions="You are a weather bot. Use the provided functions to answer questions.",
-                                       tools=list(list(type="function",
-                                                       "function" = list(name="getCurrentWeather",
-                                                                         description="Get the weather in location",
-                                                                         parameters=list(
-                                                                           type="object",
-                                                                           properties=list(
-                                                                             location=list(type="string",description="The city and state e.g. San Francisco, CA"),
-                                                                             unit=list(type="string",enum=list("c", "f"))
-                                                                             ),
-                                                                           required=list("location")
-                                                                         ))),
-                                                  list(type="function",
-                                                       "function" = list(name="getNickname",
-                                                                         description="Get the nickname of a city",
-                                                                         parameters=list(
-                                                                           type="object",
-                                                                           properties=list(
-                                                                             location=list(type="string",description="The city and state e.g. San Francisco, CA")
-                                                                           ),
-                                                                           required=list("location")
-                                                                         ))
-                                                       )),verbosity = 3
+                                   tools=list(list(type="code_interpreter")),
+                                   tool_resources=list(code_interpreter=list(file_ids=list(file_id$id))),
+                                   verbosity = 3
   )
   expect_equal(ass$model,"gpt-4-1106-preview")
+  #这里测试助手1
+  #这里是测试非流时助手
   runct<-handle_openai$runs$create_tread(ass$id,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),verbosity = 3)
   expect_equal(runct$object,"thread.run")
   runl<-handle_openai$runs$list(runct$thread_id)
@@ -72,7 +49,38 @@ test_that("run",{
   Sys.sleep(15)
   runm<-handle_openai$runs$modify(runct$thread_id,runct$id,metadata=list(test="test"),verbosity = 3)
   expect_equal(runm$metadata$test,"test")
-
+  #这里是测试流时助手
+  runct_e<-handle_openai$runs$create_tread(ass$id,stream = T,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),verbosity = 3)
+  runct_e$next_value
+  
+  
+  #这里测试助手2
+  ass2<-handle_openai$assistants$create(name="cor_flag2",
+                                        model="gpt-4-1106-preview",
+                                        instructions="You are a weather bot. Use the provided functions to answer questions.",
+                                        tools=list(list(type="function",
+                                                        "function" = list(name="getCurrentWeather",
+                                                                          description="Get the weather in location",
+                                                                          parameters=list(
+                                                                            type="object",
+                                                                            properties=list(
+                                                                              location=list(type="string",description="The city and state e.g. San Francisco, CA"),
+                                                                              unit=list(type="string",enum=list("c", "f"))
+                                                                            ),
+                                                                            required=list("location")
+                                                                          ))),
+                                                   list(type="function",
+                                                        "function" = list(name="getNickname",
+                                                                          description="Get the nickname of a city",
+                                                                          parameters=list(
+                                                                            type="object",
+                                                                            properties=list(
+                                                                              location=list(type="string",description="The city and state e.g. San Francisco, CA")
+                                                                            ),
+                                                                            required=list("location")
+                                                                          ))
+                                                   )),verbosity = 3
+  )
   mesc<-handle_openai$messages$create(runct$thread_id,role = "user",content="beijing weather?")
   runmls<-handle_openai$messages$list(runct$thread_id)
   runct<-handle_openai$runs$create(runct$thread_id,ass2$id,verbosity = 3)
@@ -120,4 +128,6 @@ test_that("run",{
   expect_true(assd$deleted)
   assd<-handle_openai$assistants$delete(ass2$id)
   expect_true(assd$deleted)
+  
+  
 })

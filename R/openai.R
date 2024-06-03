@@ -30,6 +30,7 @@ openai <- R6Class(
     messages_n=NULL,
     runs_n=NULL,
     batch_n=NULL,
+    vector_stores_n=NULL,
     act_fun=function(v,nm=NULL){
       if (missing(v)) {
         return(private[[nm]])
@@ -57,6 +58,7 @@ openai <- R6Class(
       private$messages_n<-messages$new(private$etc)
       private$runs_n<-runs$new(private$etc)
       private$batch_n<-batch$new(private$etc)
+      private$vector_stores_n<-vector_stores$new(private$etc)
     },
     #' @description Configure the proxy settings.
     #' @param proxy_ip character Required. The IP address of the proxy.
@@ -127,6 +129,10 @@ openai <- R6Class(
     #' @field batch class
     batch=function(value){
       private$act_fun(value,nm="batch_n")
+    },
+    #' @field vector_stores class
+    vector_stores=function(value){
+      private$act_fun(value,nm="vector_stores_n")
     }
   )
 )

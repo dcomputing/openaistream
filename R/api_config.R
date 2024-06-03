@@ -19,7 +19,8 @@ api_config <- R6Class(
       assistants = "https://api.openai.com/v1/assistants",
       threads = "https://api.openai.com/v1/threads",
       moderations = "https://api.openai.com/v1/moderations",
-      batchs = "https://api.openai.com/v1/batches"
+      batchs = "https://api.openai.com/v1/batches",
+      vector_stores = "https://api.openai.com/v1/vector_stores"
     )
   ),
   public = list(

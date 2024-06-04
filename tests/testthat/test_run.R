@@ -99,8 +99,9 @@ test_that("run",{
   # runmls<-handle_openai$messages$list(runct$thread_id)
   # runsls<-handle_openai$runs$list(runct$thread_id)
   # runct<-handle_openai$runs$create(runct$thread_id,ass$id,verbosity = 3)
-  runrs<-handle_openai$runs$retrieve(runct$thread_id,runto$id)
-  print(runrs)
+  # runrs<-handle_openai$runs$retrieve(runct$thread_id,runto$id)
+  # print(runrs)
+  Sys.sleep(1)
   aaa<-handle_openai$runs$cancel(runct$thread_id,runto$id,verbosity = 3)
   expect_equal(aaa$status,"cancelling")
   #error test

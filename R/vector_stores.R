@@ -78,7 +78,7 @@ vector_stores <- R6Class(
     #' @param ...  Additional parameters as required by the OpenAI API. For example:file_ids,metadata
     #' @return A vector store file object.
     file_create=function(vector_store_id,file_id,verbosity=0){
-      option$vector_store_id <- vector_store_id
+      option <- list()
       option$file_id <- file_id
       result<-private$api_call("vector_stores", paste0("/", vector_store_id,"/files"),body = option, method = "POST",headers = list(`Content-Type` = "application/json",`OpenAI-Beta`="assistants=v2"), verbosity = verbosity)
       if (inherits(result, "openai_error")) {

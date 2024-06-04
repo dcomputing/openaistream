@@ -27,12 +27,33 @@ test_that("run",{
   
   vsr <- handle_openai$vector_stores$retrieve(vector_store_id = vector_store$id)
   expect_equal(vsr$expires_after$days,1)
-  Sys.sleep(3)
+  Sys.sleep(2)
   e_vsr <- handle_openai$vector_stores$retrieve(vector_store_id = vector_store$id,verbosity = 4)
   expect_true(!e_vsr$success)
   #开始向量数仓文件功能测试
+  fvs_g <- handle_openai$vector_stores$file_create(vector_store_id = vector_store$id,file_id = goog_file_id$id)
+  expect_equal(fvs_g$id,goog_file_id$id)
+  e_fvs_g <- handle_openai$vector_stores$file_create(vector_store_id = vector_store$id,file_id = goog_file_id$id,verbosity = 4)
+  expect_true(!e_fvs_g$success)
   
-  vsd <- handle_openai$vector_stores$delete(vector_store_id = vector_store$id,verbosity = 3)
+  fvs_l <- handle_openai$vector_stores$file_list(vector_store_id = vector_store$id)
+  expect_contains(fvs_l$data$id,goog_file_id$id)
+  e_fvs_l <- handle_openai$vector_stores$file_list(vector_store_id = vector_store$id,verbosity = 4)
+  expect_true(!e_fvs_l$success)
+  
+  fvs_r <- handle_openai$vector_stores$file_retrieve(vector_store_id = vector_store$id,file_id = goog_file_id$id)
+  expect_equal(fvs_r$id,goog_file_id$id)
+  e_fvs_r <- handle_openai$vector_stores$file_retrieve(vector_store_id = vector_store$id,file_id = goog_file_id$id,verbosity = 4)
+  expect_true(!e_fvs_r$success)
+  
+  fvs_d <- handle_openai$vector_stores$file_delete(vector_store_id = vector_store$id,file_id = goog_file_id$id)
+  expect_true(fvs_d$deleted)
+  Sys.sleep(2)
+  e_fvs_d <- handle_openai$vector_stores$file_delete(vector_store_id = vector_store$id,file_id = goog_file_id$id,verbosity = 4)
+  print(e_fvs_d)
+  expect_true(!e_fvs_d$success)
+  
+  vsd <- handle_openai$vector_stores$delete(vector_store_id = vector_store$id,verbosity = 0)
   expect_true(vsd$deleted)
   e_vsd <- handle_openai$vector_stores$delete(vector_store_id = vector_store$id)
   expect_true(!e_vsd$success)

@@ -20,7 +20,7 @@ test_that("assistants",{
   expect_equal(ass$name,"cor_flag")
   assr<-handle_openai$assistants$retrieve(ass$id)
   expect_equal(assr$name,"cor_flag")
-  assm<-handle_openai$assistants$modify(assr$id,model="gpt-4-1106-preview",tools=list(list(type="retrieval"),list(type="code_interpreter")))
+  assm<-handle_openai$assistants$modify(assr$id,model="gpt-4-1106-preview",tools=list(list(type="code_interpreter")),verbosity = 3)
   expect_equal(assm$model,"gpt-4-1106-preview")
   assl<-handle_openai$assistants$list()
   expect_contains(assl$data$name,"cor_flag")

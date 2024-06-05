@@ -8,7 +8,7 @@ test_that("assistants",{
   ass<-handle_openai$assistants$create(name="cor_flag",
                                    model="gpt-4",
                                    instructions="I am HealthNutritionAssistant, designed to provide professional and accurate health and nutrition advice.
-                                   My primary function is to answer health or nutrition related questions using the uploaded file “assfile.csv,” which contains common health and nutrition questions and their answers.
+                                   My primary function is to answer health or nutrition related questions using the uploaded file “assfile.txt,” which contains common health and nutrition questions and their answers.
                                    When a user asks a health or nutrition question, I'll first consult this file.
                                    If it contains a relevant answer, I will use it to respond.
                                    If the file lacks a direct answer, I'll offer general advice based on my broad knowledge and suggest consulting a professional doctor or nutritionist for specific issues.
@@ -25,7 +25,7 @@ test_that("assistants",{
   assl<-handle_openai$assistants$list()
   expect_contains(assl$data$name,"cor_flag")
   # #ass file
-  # train_file_path<-system.file("exdata","assfile.csv", package = "openaistream")
+  # train_file_path<-system.file("exdata","assfile.txt", package = "openaistream")
   # file_id <- handle_openai$files$upload(path = train_file_path,purpose = "assistants",verbosity = 0)
   # #this is a openai bug,the first is success ,but return is error,so we neet run two
   # assfc<-handle_openai$assistants$file_create(assm$id,file_id$id,verbosity = 0)

@@ -82,6 +82,7 @@ DataStream <- R6::R6Class(
             }
           })
           lstr_cleaned <- lstr[nchar(unlist(lstr)) > 1]
+          browser()
           if(length(lstr_cleaned)==0){
             private$destroy("complete")
             return("complete")
@@ -100,9 +101,10 @@ DataStream <- R6::R6Class(
               choices <- pr$choices
               if(length(choices)==0&!is.null(pr$usage)){
                 return(data.frame(index="-2",content=paste0("usage:",pr$usage$total_tokens)))
-              }else if(length(choices)==0){
-                return(data.frame(index="-1",content=""))
               }else{
+                #else if(length(choices)==0){
+                #return(data.frame(index="-1",content=""))
+                #}
                 return(data.frame(index=choices$index[1],choices$delta))
               }
             })

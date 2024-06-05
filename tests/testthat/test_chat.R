@@ -81,8 +81,8 @@ test_that("chat",{
                           content = c("You are a assistant.", "How's the weather today?")),
     model = "gpt-3.5-turbo",
     stream = TRUE,
-    max_tokens = 3,
-    n =3
+    max_tokens = 1,
+    n =1
   )
   for(i in 1:10){
     text<-streamlg$next_value

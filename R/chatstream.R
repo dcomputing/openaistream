@@ -59,7 +59,9 @@ DataStream <- R6::R6Class(
         })
       }
       if (private$status =="httr2_open") {
-        if(grepl(summary(private$requery)$description,pattern = "api.openai.com/v1/audio/speech")){
+        #获取流数据endpoint
+        ept<-summary(private$requery)$description
+        if(grepl(ept,pattern = "api.openai.com/v1/audio/speech")){
           buf <- readBin(private$requery,what = "raw", private$num * 2)
           if(length(buf)==0){
             private$destroy("complete")
@@ -86,7 +88,7 @@ DataStream <- R6::R6Class(
           }
           #browser()
           #print(lstr_cleaned)
-          if(grepl(summary(private$requery)$description,pattern = "api.openai.com/v1/threads")){
+          if(grepl(ept,pattern = "api.openai.com/v1/threads")){
             #这里处理run的数据
             vres <- lapply(grep(lstr_cleaned,pattern = "^event: ",value = T), function(v) {
               fromJSON(v)

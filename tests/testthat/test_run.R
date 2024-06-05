@@ -51,7 +51,7 @@ test_that("run",{
   runm<-handle_openai$runs$modify(runct$thread_id,runct$id,metadata=list(test="test"),verbosity = 3)
   expect_equal(runm$metadata$test,"test")
   #这里是测试流时助手
-  runct_e<-handle_openai$runs$create_tread(ass$id,stream = T,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),verbosity = 3)
+  runct_e<-handle_openai$runs$create_tread(ass$id,stream = T,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),max_completion_tokens=100,verbosity = 3)
   runct_e$next_value
   runct_e$close()
   

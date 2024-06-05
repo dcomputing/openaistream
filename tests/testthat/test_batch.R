@@ -40,8 +40,8 @@ test_that("test fileload and fine train",{
   expect_equal(batch_status$id,batch$id)
   
   #error test
-  res<-handle_openai$batch$cancel(batch_id = batch$id,verbosity = 0)
-  expect_equal(batch_status$status,"cancelling")
+  res<-handle_openai$batch$cancel(batch_id = batch$id,verbosity = 4)
+  expect_true(!res$success)
   
   #error test
   del_res<-handle_openai$files$delete(file_id$id, verbosity = 0)

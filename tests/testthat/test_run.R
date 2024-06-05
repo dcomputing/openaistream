@@ -53,6 +53,7 @@ test_that("run",{
   #这里是测试流时助手
   runct_e<-handle_openai$runs$create_tread(ass$id,stream = T,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),verbosity = 3)
   runct_e$next_value
+  runct_e$close()
   
   
   #这里测试助手2
@@ -80,11 +81,11 @@ test_that("run",{
                                                                             ),
                                                                             required=list("location")
                                                                           ))
-                                                   )),verbosity = 3
+                                                   )),verbosity = 0
   )
   mesc<-handle_openai$messages$create(runct$thread_id,role = "user",content="beijing weather?")
   runmls<-handle_openai$messages$list(runct$thread_id)
-  runct<-handle_openai$runs$create(runct$thread_id,ass2$id,verbosity = 3)
+  runct<-handle_openai$runs$create(runct$thread_id,ass2$id,verbosity = 0)
   runrs<-handle_openai$runs$retrieve(runct$thread_id,runct$id)
   for(i in 1:10){
     if(runrs$status!="completed"){
@@ -96,6 +97,15 @@ test_that("run",{
   }
   runto<-handle_openai$runs$submit_tool_outputs(runct$thread_id,runct$id,tool_outputs = list(list(tool_call_id=runrs$required_action$submit_tool_outputs$tool_calls$id,output="BJ")),verbosity = 3)
   expect_equal(runto$object,"thread.run")
+  
+  runct_e<-handle_openai$runs$create(runct$thread_id,ass2$id,stream = T,verbosity = 0)
+  runct_e$next_value
+  runct_e$close()
+  
+  runto_e<-handle_openai$runs$submit_tool_outputs(runct$thread_id,runct$id,stream = T,tool_outputs = list(list(tool_call_id=runrs$required_action$submit_tool_outputs$tool_calls$id,output="BJ")),verbosity = 3)
+  runto_e$next_value
+  runto_e$close()
+  
   # runmls<-handle_openai$messages$list(runct$thread_id)
   # runsls<-handle_openai$runs$list(runct$thread_id)
   # runct<-handle_openai$runs$create(runct$thread_id,ass$id,verbosity = 3)

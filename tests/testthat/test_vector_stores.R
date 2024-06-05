@@ -50,8 +50,30 @@ test_that("run",{
   expect_true(fvs_d$deleted)
   Sys.sleep(2)
   e_fvs_d <- handle_openai$vector_stores$file_delete(vector_store_id = vector_store$id,file_id = goog_file_id$id,verbosity = 4)
-  print(e_fvs_d)
   expect_true(!e_fvs_d$success)
+  
+  bvs_g <- handle_openai$vector_stores$file_batche_create(vector_store_id = vector_store$id,file_id = c(goog_file_id$id,brka_file_id$id))
+  expect_equal(bvs_g$vector_store_id,vector_store$id)
+  e_bvs_g <- handle_openai$vector_stores$file_batche_create(vector_store_id = vector_store$id,file_id = c(goog_file_id$id,brka_file_id$id),verbosity = 4)
+  expect_true(!e_bvs_g$success)
+  
+  
+  bvs_r <- handle_openai$vector_stores$file_batche_retrieve(vector_store_id = vector_store$id,batch_id = bvs_g$id,verbosity = 0)
+  expect_equal(bvs_r$file_counts$total,2)
+  e_bvs_r <- handle_openai$vector_stores$file_batche_retrieve(vector_store_id = vector_store$id,batch_id = bvs_g$id,verbosity = 4)
+  expect_true(!e_bvs_r$success)
+  
+  Sys.sleep(5)
+  bvs_l <- handle_openai$vector_stores$file_batche_list(vector_store_id = vector_store$id,batch_id = bvs_g$id,verbosity = 3)
+  expect_contains(bvs_l$data$id,goog_file_id$id)
+  e_bvs_l <- handle_openai$vector_stores$file_batche_list(vector_store_id = vector_store$id,batch_id = bvs_g$id,verbosity = 4)
+  expect_true(!e_bvs_l$success)
+  
+  bvs_c <- handle_openai$vector_stores$file_batche_cancel(vector_store_id = vector_store$id,batch_id = bvs_g$id)
+  expect_equal(bvs_c$vector_store_id,vector_store$id)
+  e_bvs_c <- handle_openai$vector_stores$file_batche_cancel(vector_store_id = vector_store$id,batch_id = bvs_g$id,verbosity = 4)
+  expect_true(!e_bvs_c$success)
+  
   
   vsd <- handle_openai$vector_stores$delete(vector_store_id = vector_store$id,verbosity = 0)
   expect_true(vsd$deleted)

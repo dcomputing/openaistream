@@ -82,7 +82,7 @@ DataStream <- R6::R6Class(
             }
           })
           lstr_cleaned <- lstr[nchar(unlist(lstr)) > 1]
-          browser()
+          #browser()
           if(length(lstr_cleaned)==0){
             private$destroy("complete")
             return("complete")

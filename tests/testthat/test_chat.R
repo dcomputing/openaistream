@@ -82,6 +82,7 @@ test_that("chat",{
     model = "gpt-3.5-turbo",
     stream = TRUE,
     max_tokens = 1,
+    num=1,
     n =1
   )
   for(i in 1:10){

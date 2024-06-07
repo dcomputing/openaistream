@@ -82,5 +82,4 @@ test_that("run",{
   #以下为删除相关文件
   del_res1<-handle_openai$files$delete(file_id = goog_file_id$id, verbosity = 0)
   del_res2<-handle_openai$files$delete(file_id = brka_file_id$id, verbosity = 0)
-  
 })

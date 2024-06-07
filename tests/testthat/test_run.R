@@ -11,7 +11,7 @@ test_that("run",{
   train_file_path<-system.file("exdata","assfile.txt", package = "openaistream")
   file_id <- handle_openai$files$upload(path = train_file_path,purpose = "assistants",verbosity = 0)
   ass<-handle_openai$assistants$create(name="cor_flag",
-                                       model="gpt-4-1106-preview",
+                                       model="gpt-4o",
                                        instructions="I am HealthNutritionAssistant, designed to provide professional and accurate health and nutrition advice.
                                    My primary function is to answer health or nutrition related questions using the uploaded file “assfile.txt,” which contains common health and nutrition questions and their answers.
                                    When a user asks a health or nutrition question, I'll first consult this file.
@@ -25,7 +25,7 @@ test_that("run",{
                                    tool_resources=list(code_interpreter=list(file_ids=list(file_id$id))),
                                    verbosity = 3
   )
-  expect_equal(ass$model,"gpt-4-1106-preview")
+  expect_equal(ass$model,"gpt-4o")
   #这里测试助手1
   #这里是测试非流时助手
   runct<-handle_openai$runs$create_tread(ass$id,thread=list(messages=list(list(role="user",content="What foods are good for heart health?"))),verbosity = 3)
@@ -58,7 +58,7 @@ test_that("run",{
   
   #这里测试助手2
   ass2<-handle_openai$assistants$create(name="cor_flag2",
-                                        model="gpt-4-1106-preview",
+                                        model="gpt-4o",
                                         instructions="You are a weather bot. Use the provided functions to answer questions.",
                                         tools=list(list(type="function",
                                                         "function" = list(name="getCurrentWeather",

@@ -106,7 +106,7 @@ streamlg <- handle_openai$chat$create(
 )
 ```
 
-(For full API support, usage reference: [chat.R](https://github.com/libingfei/openaistream/blob/main/tests/testthat/chat.R))
+(For full API support, usage reference: [chat.R](https://github.com/libingfei/openaistream/blob/main/tests/testthat/test_chat.R))
 
 ## 4. Images
 

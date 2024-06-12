@@ -11,6 +11,9 @@ test_that("test fileload and fine train",{
   batch<-handle_openai$batch$create(input_file_id = file_id$id,endpoint = "/v1/chat/completions",completion_window ="24h")
   expect_equal(batch$input_file_id,file_id$id)
   
+  batch_status<-handle_openai$batch$cancel(batch_id = batch$id,verbosity = 0)
+  expect_equal(batch_status$id,batch$id)
+  
   #job create for error test
   res<-handle_openai$batch$create(input_file_id = file_id$id,endpoint = "/v1/chat/completions",completion_window ="24h",verbosity = 4)
   expect_true(!res$success)
@@ -33,8 +36,7 @@ test_that("test fileload and fine train",{
   res<-handle_openai$batch$list(verbosity = 4)
   expect_true(!res$success)
   
-  batch_status<-handle_openai$batch$cancel(batch_id = batch$id,verbosity = 0)
-  expect_equal(batch_status$id,batch$id)
+
   
   #error test
   res<-handle_openai$batch$cancel(batch_id = batch$id,verbosity = 4)

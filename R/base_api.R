@@ -5,9 +5,11 @@ base_api <- R6Class(
     etc = NULL,
     #base_call
     base_call = function(endpoint, path="", body=NULL, method="GET", headers=list(), query=list()){
-      url <- private$etc$get_api_endpoints()[[endpoint]]
+      endpoints <- private$etc$get_api_endpoints()
+      url <- endpoints[[endpoint]]
       req <- request(url) %>%
         req_headers(Authorization = paste0("Bearer ",private$etc$get_api_key()),!!!headers) %>%
+        #req_headers(!!!headers) %>%
         req_method(method)
       if (path != "") {
         req <- req %>% req_url_path_append(strsplit(path, "/")[[1]])

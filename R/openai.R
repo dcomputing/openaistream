@@ -42,9 +42,10 @@ openai <- R6Class(
   public = list(
     #' @description Initialize the OpenAI API interface with the provided API key.
     #' @param api_key The OpenAI API key.
-    initialize = function(api_key) {
+    initialize = function(api_key, targetAi) {
       private$etc = api_config$new()
       private$etc$set_api_key(api_key)
+      private$etc$set_targetAi(targetAi)
       private$models_n<-models$new(private$etc)
       private$files_n<-files$new(private$etc)
       private$fine_tuning_n<-fine_tuning$new(private$etc)

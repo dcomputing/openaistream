@@ -1,39 +1,30 @@
 
-# openaistream <img src="man/figures/logo.png" align="right" width="120"/>
+# openaistreamES <img src="man/figures/lamb.jpg" align="right" width="120"/>
 
-<!-- badges: start -->
-
-[![R-CMD-check](https://github.com/libingfei/openaistream/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/libingfei/openaistream/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/libingfei/openaistream/graph/badge.svg?token=G8AXF6F4BC)](https://codecov.io/gh/libingfei/openaistream)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/openaistream)](https://CRAN.R-project.org/package=openaistream)
-[![CRAN
-Downloads](https://cranlogs.r-pkg.org/badges/grand-total/openaistream?color=brightgreen)](https://cranlogs.r-pkg.org/badges/grand-total/openaistream?color=brightgreen)
-<!-- badges: end -->
 
 ## Overview
 
-`{openaistream}` is an unofficial SDK for OpenAI, which aims to
-implement all related features as comprehensively as possible. It is
+`{openaistreamES}` is based on an unofficial SDK for OpenAI, which aimed to
+implement all related features as comprehensively as possible. It was
 updated every two months based on the actual changes in OpenAI’s
-interfaces.
+interfaces but was last updated June 2024. This fork extends the library to enable support for deepseek or local openai api capable streaming responses.
 
 ## 1. Installation
 
-The method to install openai is:
+The method to install this package is to download and install from source:
 
 ``` r
-  install.packages("openaistream")
+  install.packages("path to openaistreamES", repos = NULL, type = "source")
 ```
 
 ## 2. Creating an OpenAI Connection
 
 ### 2.1 Create a Link Object
 
-Before using the API, you need to create a link object and configure your secret key:
+Before using the API, you need to create a link object and configure your secret key and the target ai server:
 
 ```r
-handle_openai <- openai$new(Sys.getenv("OPENAI_KEY"))
+handle_openai <- openai$new(Sys.getenv("OPENAI_KEY", "openai"))
 ```
 
 ### 2.2 Configure Proxy (Optional)
